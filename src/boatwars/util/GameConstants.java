@@ -4,7 +4,8 @@ import java.io.File;
 
 public class GameConstants {
     public final static String TITLE = "BoatWars";
-    public final static String VERSION = "1.20";
+    public final static String VERSION = "2.0";
+    public final static int MAX_PLAYERS = 2;
     public final static byte STATE_MENU = 0;
     public final static byte STATE_PLACING_BOATS = 1;
     public final static byte STATE_WAITING = 2;

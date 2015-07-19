@@ -5,153 +5,99 @@ import boatwars.util.GameConstants;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class Server extends Thread{
-    private ServerSocket server;
-    private MainController controller;
+public class Server{
+    private static ServerSocket server;
+    private static ConnectionListener connectionListener;
     private ObjectOutputStream outgoing;
-    private ServerHandler [] handler;
-    private boolean listening;
-    public byte setupComplete;
-    
-    public Server(MainController controller){
-        listening = true;
+    private static ExecutorService connectionPool;
+    private static List<ConnectionHandler> connections;
+    private static boolean listening;
+
+    public static void init(){
         try{
-            server = new ServerSocket(GameConstants.PORT);   
+            connections = new ArrayList<ConnectionHandler>();
+            connectionListener = new ConnectionListener();
+            connectionListener.start();
         }catch(Exception e){
             e.printStackTrace();
         }
-        this.controller = controller;
-        handler = new ServerHandler[2];
+        connectionPool = Executors.newFixedThreadPool(2);
     }
-    
-    @Override
-    public void run(){
-        startServer();
+
+    public static boolean isRunning(){
+        return listening;
     }
-    
-    public void startServer(){
+
+    public static void shutdown(){
         try{
-            System.out.println("Waiting for connections...");
-            int i = 0;
-            while(listening){
-                Socket client = server.accept();
-                controller.chatMessageReceived(client.getInetAddress().getHostAddress() + " connected.", "SERVER");
-                handler[i] = new ServerHandler(this, controller);
-                handler[i].setClient(client);
-                handler[i].start();
-                i ++;
-                if(i >= handler.length){
-                    listening = false;
-                    controller.chatMessageReceived("Server running on " + server.getInetAddress().getHostAddress() + ".", "SERVER");
-                }
-            }
+            connectionListener.stopListening();
+            server.close();
+            connectionPool.shutdown();
         }catch(Exception e){
-            e.printStackTrace();
-        }
-        
-        for(int i = 0; i < handler.length; i ++){
-            if(handler[i] != null){
-                try{
-                    outgoing = new ObjectOutputStream(handler[i].getClient().getOutputStream());
-                    outgoing.writeObject(new String[]{GameConstants.REQUEST_PLAYER, GameConstants.SERVER_CONNECTION_ON + i, "SERVER"});
-                    outgoing.flush();
-                    outgoing = new ObjectOutputStream(handler[i].getClient().getOutputStream());
-                    outgoing.writeObject(new String[]{GameConstants.REQUEST_MESSAGE, "Game has started. Place your boats!", "SERVER"});
-                    outgoing.flush();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
+
         }
     }
-    
-    public synchronized byte getSetupCompleteNumber(){
-        return this.setupComplete;
-    }
-    
-    public synchronized void incSetupComplete(){
-        this.setupComplete ++;
-    }
-    
-    public synchronized boolean isOffline(){
-        return this.server.isClosed();
-    }
-    
-    public void disconnect(){
-        try{
-            sendToClients(new String[]{GameConstants.REQUEST_DISCONNECT, "Server disconnected", "SERVER"});
-            if(outgoing == null){
-                controller.chatMessageReceived("Server stopped.", "SERVER");
-                server.close();
-            }
-            else{
-                outgoing.close();
-                server.close();
-                for (int i = 0; i < handler.length; i++) {
-                    if (handler[i] != null) {
-                        handler[i].stopRunning();
-                    }
-                }
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-    
-    
+
     /**
-     * Sends data to all connected clients.
-     * @param data 
+     * A utility inner class that contains the available replies that gives.
      */
-    private void sendToClients(String[] data){
-        for(int i = 0; i < handler.length; i ++){
-            if(handler[i] != null){
-                if(!handler[i].getClient().isClosed() && handler[i].isAlive()){
-                    try{
-                        outgoing = new ObjectOutputStream(handler[i].getClient().getOutputStream());
-                        outgoing.writeObject(data);
-                        outgoing.flush();
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
+    private static class ReplyHandler{
+        public static void sendMessageToClients(ConnectionHandler client, String message){
+
+        }
+
+        public static void closeConnection(Socket client, String[]data){
+            try{
+                ObjectOutputStream stream = new ObjectOutputStream(client.getOutputStream());
+                stream.writeObject(data);
+                stream.flush();
+
+                stream.close();
+                client.close();
+            }catch(Exception e){
+
             }
         }
     }
-    
-    public synchronized void receiveJPData(String[] data){
-        switch(data[0]){
-            case GameConstants.REQUEST_MESSAGE:
-                sendToClients(data);
-                break;
-            case GameConstants.REQUEST_DISCONNECT:
-                sendToClients(data);
-                break;
-            case GameConstants.REQUEST_CLIENT_BYE:
-                sendToClients(data);
-                break;
-            case GameConstants.REQUEST_READY:
-                sendToClients(data);
-                break;
-            case GameConstants.REQUEST_ENDTURN:
-                sendToClients(data);
-                break;
-            case GameConstants.REQUEST_BEGIN:
-                sendToClients(data);
-                break;
-            case GameConstants.REQUEST_HIT:
-                sendToClients(data);
-                break;
-            case GameConstants.REQUEST_MISS:
-                sendToClients(data);
-                break;
-            case GameConstants.REQUEST_SUNK:
-                sendToClients(data);
-                break;
-            case GameConstants.REQUEST_ALL_DESTROYED:
-                sendToClients(data);
-                break;
+
+    /**
+     * The listener thread for the server that waits for incoming client connections.
+     */
+    private static class ConnectionListener extends Thread{
+
+        private void startListening() throws Exception{
+            server = new ServerSocket(GameConstants.PORT);
+            listening = true;
+        }
+
+        private void stopListening() throws Exception{
+            listening = false;
+        }
+
+        @Override
+        public void run(){
+            try{
+                startListening();
+
+                while(listening){
+                    Socket client = server.accept();
+                    if(GameConstants.MAX_PLAYERS >= connections.size()){
+                        ReplyHandler.closeConnection(client, new String[]{GameConstants.REQUEST_DISCONNECT, "Paskaa perseeseen", "SERVER"});
+                    }
+                    else{
+                        connections.add(new ConnectionHandler(client));
+                        MainController.chatMessageReceived(client.getInetAddress().getHostAddress() + " connected.", "SERVER");
+                        connectionPool.execute(connections.get(connections.size() - 1));
+                    }
+                }
+            }catch(Exception  e){
+
+            }
         }
     }
 }

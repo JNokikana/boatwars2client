@@ -1,216 +1,210 @@
 package boatwars.util;
 
-import boatwars.net.ConnectorClient;
+import boatwars.net.Client;
 import boatwars.net.Server;
 
 public class GameAssets {
-    private byte gameState;
-    private Server server;
-    private ConnectorClient client;
-    private String nickname;
-    private boolean won;
-    private byte playerId;
-    private boolean grid;
-    private byte selected;
-    private boolean oriented;
-    private int [][] shipCoordinates;
-    private boolean allPlaced;
-    private boolean targetPlaced;
-    private boolean isTurn;
+    private static byte gameState;
+    private static Server server;
+    private static Client client;
+    private static String nickname;
+    private static boolean won;
+    private static byte playerId;
+    private static boolean grid;
+    private static byte selected;
+    private static boolean oriented;
+    private static int [][] shipCoordinates;
+    private static boolean allPlaced;
+    private static boolean targetPlaced;
+    private static boolean isTurn;
     /* The coordinates of the tile that you wish to target. */
-    private int [][] targetCoords;
+    private static int [][] targetCoords;
     /* Tells whether the indicated space has been hit or not. The last value indicates whether
        the shot was a hit or not.*/
-    private byte[][] hitSpaces;
+    private static byte[][] hitSpaces;
     /** Indicates whether a ship is placed or not and 
      * if it is oriented.
      */
-    private boolean [][] isPlaced;
-    private int[] mouseXY;
-    private boolean [] destroyedShips;
-    private SoundControl soundControl;
-    
-    public GameAssets(){
+    private static boolean [][] isPlaced;
+    private static int[] mouseXY;
+    private static boolean [] destroyedShips;
+
+    public static void initialize(){
         gameState = GameConstants.STATE_MENU;
-        soundControl = new SoundControl();
         grid = false;
         oriented = false;
         resetShipVariables();
     }
     
-    public void setGameResult(boolean b){
+    public static void setGameResult(boolean b){
         won = b;
     }
     
-    public void resetShipVariables(){
+    public static void resetShipVariables(){
         isPlaced = new boolean[GameConstants.SHIPS.length][2];
         shipCoordinates = new int[GameConstants.SHIPS.length][2];
-        this.targetCoords = new int[1][2];
+        targetCoords = new int[1][2];
         targetCoords[0][0] = -1;
-        this.hitSpaces = new byte[20][10];
+        hitSpaces = new byte[20][10];
         destroyedShips = new boolean[GameConstants.SHIPS.length];
         isTurn = false;
-        this.mouseXY = new int[2];
+        mouseXY = new int[2];
         grid = false;
     }
     
-    public void setDestroyedShips(int i, boolean b){
+    public static void setDestroyedShips(int i, boolean b){
         destroyedShips[i] = b;
     }
     
-    public void setIsPlaced(int i, boolean placed, boolean oriented){
-        this.isPlaced[i][0] = placed;
-        this.isPlaced[i][1] = oriented;
+    public static void setIsPlaced(int i, boolean placed, boolean oriented){
+        isPlaced[i][0] = placed;
+        isPlaced[i][1] = oriented;
     }
     
-    public void setShipCoordinates(int x, int y, int i){
-        this.shipCoordinates[i][0] = x;
-        this.shipCoordinates[i][1] = y;
+    public static void setShipCoordinates(int x, int y, int i){
+        shipCoordinates[i][0] = x;
+        shipCoordinates[i][1] = y;
     }
     
-    public void setTargetPlaced(boolean b){
-        this.targetPlaced = b;
+    public static void setTargetPlaced(boolean b){
+        targetPlaced = b;
     }
     
-    public void setTileState(int x, int y, byte value){
-        this.hitSpaces[x / GameConstants.TILE_SIZE][y / GameConstants.TILE_SIZE] = value;
+    public static void setTileState(int x, int y, byte value){
+        hitSpaces[x / GameConstants.TILE_SIZE][y / GameConstants.TILE_SIZE] = value;
     }
     
-    public boolean[][] getIsPlaced(){
-        return this.isPlaced;
+    public static boolean[][] getIsPlaced(){
+        return isPlaced;
     }
     
-    public byte getTileState(int x, int y){
+    public static byte getTileState(int x, int y){
         System.out.println(x + " " + y);
-        return this.hitSpaces[x / GameConstants.TILE_SIZE][y / GameConstants.TILE_SIZE];
+        return hitSpaces[x / GameConstants.TILE_SIZE][y / GameConstants.TILE_SIZE];
     }
     
     public byte[][] getHitSpaces(){
-        return this.hitSpaces;
+        return hitSpaces;
     }
     
-    public int[] getMouseXY(){
-        return this.mouseXY;
-    }
-    
-    public SoundControl getSoundControl(){
-        return this.soundControl;
+    public static int[] getMouseXY(){
+        return mouseXY;
     }
     
     public boolean gameWon(){
-        return this.won;
+        return won;
     }
     
-    public void setTurn(boolean b){
-        this.isTurn = b;
+    public static void setTurn(boolean b){
+        isTurn = b;
     }
     
-    public boolean isTurn(){
-        return this.isTurn;
+    public static boolean isTurn(){
+        return isTurn;
     }
     
-    public boolean isShipDestroyed(int i){
+    public static boolean isShipDestroyed(int i){
         return destroyedShips[i];
     }
     
     public void setMouseXY(int x, int y){
-        this.mouseXY[0] = x;
-        this.mouseXY[1] = y;
+        mouseXY[0] = x;
+        mouseXY[1] = y;
     }
     
-    public int[][] getShipCoordinates(){
-        return this.shipCoordinates;
+    public static int[][] getShipCoordinates(){
+        return shipCoordinates;
     }
     
-    public void setSelected(byte b){
-        this.selected = b;
+    public static void setSelected(byte b){
+        selected = b;
     }
     
-    public void incSelected(){
+    public static void incSelected(){
         selected ++;
         if(selected == GameConstants.SHIPS.length){
             allPlaced = true;
         }
     }
     
-    public boolean allPlaced(){
+    public static boolean allPlaced(){
         return allPlaced;
     }
     
     public boolean isGrid(){
-        return this.grid;
+        return grid;
     }
     
-    public boolean isOriented(){
-        return this.oriented;
+    public static boolean isOriented(){
+        return oriented;
     }
     
-    public void switchOrientation(){
-        this.oriented =! oriented;
+    public static void switchOrientation(){
+        oriented =! oriented;
     }
     
-    public void setGrid(boolean b){
-        this.grid = b;
+    public static void setGrid(boolean b){
+        grid = b;
     }
     
     public boolean isHost(){
-        return this.server != null;
+        return server != null;
     }
     
-    public void setPlayerId(byte playerId){
-        this.playerId = playerId;
+    public static void setPlayerId(byte id){
+        playerId = id;
     }
     
     public void setServer(Server server){
-        this.server = server;
+        server = server;
     }
     
-    public void setClient(ConnectorClient client){
-        this.client = client;
+    public void setClient(Client client){
+        client = client;
     }
     
-    public void setState(byte g){
-        this.gameState = g;
+    public static void setState(byte g){
+        gameState = g;
     }
     
-    public void setNickname(String nick){
-        this.nickname = nick;
+    public static void setNickname(String nick){
+        nickname = nick;
     }
     
     public Server getServer(){
-        return this.server;
+        return server;
     }
     
-    public ConnectorClient getClient(){
-        return this.client;
+    public static Client getClient(){
+        return client;
     }
     
-    public byte getState(){
-        return this.gameState;
+    public static byte getState(){
+        return gameState;
     }
     
-    public byte getSelected(){
-        return this.selected;
+    public static byte getSelected(){
+        return selected;
     }
     
-    public int[][] getTargetCoords(){
-        return this.targetCoords;
+    public static int[][] getTargetCoords(){
+        return targetCoords;
     }
     
-    public void setTargetCoords(int x, int y){
-        this.targetCoords[0][0] = x;
-        this.targetCoords[0][1] = y;
+    public static void setTargetCoords(int x, int y){
+        targetCoords[0][0] = x;
+        targetCoords[0][1] = y;
     }
     
-    public boolean isTargetPlaced(){
-        return this.targetPlaced;
+    public static boolean isTargetPlaced(){
+        return targetPlaced;
     }
     
-    public String getNickname(){
-        return this.nickname;
+    public static String getNickname(){
+        return nickname;
     }
     
-    public byte getPlayerId(){
-        return this.playerId;
+    public static byte getPlayerId(){
+        return playerId;
     }
 }

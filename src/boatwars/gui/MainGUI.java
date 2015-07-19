@@ -1,6 +1,7 @@
 package boatwars.gui;
 
 import boatwars.controller.MainController;
+import boatwars.main.BoatWars;
 import boatwars.util.GameConstants;
 import boatwars.util.GameAssets;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,6 @@ import javax.swing.UIManager;
 public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionListener{
     private MainController mainController;
     private GameAssets assets;
-    private String path;
     
     private JMenuBar menuBar;
     private JMenu menu;
@@ -43,13 +43,11 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
     private javax.swing.JScrollPane scrollbar;
     private JLabel shipScreen;
     
-    public MainGUI(GameAssets g){
+    public MainGUI(){
         try{
-            path = new File("").getCanonicalPath();
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }catch(Exception e){}
-        assets = g;
-        mainController = new MainController(this, assets);
+        MainController.setGUI(this);
         mouse = new MouseListener();
         /*assets.getSoundControl().playSound(GameConstants.MUSIC_THEME);*/
         initComponents();
@@ -192,7 +190,7 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
         initButtons();
         initMenuBars();
         setName("Main");
-        setIconImage(new ImageIcon(path + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_MENU).getImage());
+        setIconImage(new ImageIcon(BoatWars.PATH + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_MENU).getImage());
         setJMenuBar(menuBar);
         addWindowListener(new WindowListener(){
             @Override
@@ -271,7 +269,7 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
         
         @Override
         public void mouseMoved(MouseEvent e){
-            if(assets.getState() == GameConstants.STATE_GAME || assets.getState() == GameConstants.STATE_PLACING_BOATS){
+            if(GameAssets.getState() == GameConstants.STATE_GAME || GameAssets.getState() == GameConstants.STATE_PLACING_BOATS){
                 int x = (e.getPoint().x / GameConstants.TILE_SIZE);
                 int y = (e.getPoint().y  / GameConstants.TILE_SIZE);
 
@@ -284,10 +282,10 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
         
         @Override
         public void mousePressed(MouseEvent e){
-            if(assets.getState() == GameConstants.STATE_PLACING_BOATS && !assets.allPlaced()){
+            if(GameAssets.getState() == GameConstants.STATE_PLACING_BOATS && !GameAssets.allPlaced()){
                 mainController.actionPlaceBoat();
             }
-            else if(assets.getState() == GameConstants.STATE_GAME){
+            else if(GameAssets.getState() == GameConstants.STATE_GAME){
                 mainController.actionPlaceTarget();
             }
         }

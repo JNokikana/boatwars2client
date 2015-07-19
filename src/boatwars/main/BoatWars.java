@@ -3,16 +3,21 @@ package boatwars.main;
 import boatwars.gui.MainGUI;
 import boatwars.util.GameAssets;
 
+import java.io.File;
+
 public class BoatWars {
-    private static GameAssets assets;
-    
+    public static String PATH;
+
     public static void main(String[] args) {
-        assets = new GameAssets();
-        init(assets);
+        try{
+            PATH = new File("").getCanonicalPath();
+        }catch(Exception e){}
+        init();
     }
     
-    private static void init(GameAssets ass){
-        new MainGUI(ass);
+    private static void init(){
+        GameAssets.initialize();
+        new MainGUI();
     }
     
 }
