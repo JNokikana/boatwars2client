@@ -1,16 +1,16 @@
 package boatwars.controller;
 
+import boatwars.BoatWars;
 import boatwars.gui.MainGUI;
 import boatwars.gui.NewGameJoinGUI;
-import boatwars.main.BoatWars;
 import boatwars.net.Client;
 import boatwars.net.Server;
 import boatwars.util.GameAssets;
 import boatwars.util.GameConstants;
+
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,10 +22,10 @@ public class MainController {
         gui = g;
     }
     
-    public void drawPlateScreen(){
-        ImageIcon scaledImage = scaleImage(this.gui.getScorePicture(),
+    public static void drawPlateScreen(){
+        ImageIcon scaledImage = scaleImage(gui.getScorePicture(),
                 new ImageIcon(BoatWars.PATH + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_PLATE));
-        this.gui.getScorePicture().setIcon(scaledImage);
+        gui.getScorePicture().setIcon(scaledImage);
     }
     
     public static void drawShipPlate(){
@@ -34,7 +34,7 @@ public class MainController {
         gui.getShipScreen().setIcon(scaledImage);
     }
     
-    public void keyPress(KeyEvent k){
+    public static void keyPress(KeyEvent k){
         if((GameAssets.getState() != GameConstants.STATE_MENU) &&
                 k.getKeyCode() == KeyEvent.VK_ENTER
                 && gui.getChatField().getText().length() > 0 && gui.getChatField().hasFocus()){
@@ -43,12 +43,12 @@ public class MainController {
         }
     }
     
-    private void showServerNotice(){
+    private static void showServerNotice(){
         JOptionPane.showMessageDialog(null, "To play online you must open port " + GameConstants.PORT + " "
                 + " from your router settings.", "Start Server", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    public void actionHostGame(){
+    public static void actionHostGame(){
         showServerNotice();
         if (Server.isRunning()) {
             try {
@@ -59,16 +59,16 @@ public class MainController {
         createServer();
     }
     
-    public void actionOrientation(){
+    public static void actionOrientation(){
         GameAssets.switchOrientation();
         refreshShipScreen();
     }
     
-    public void actionJoinGame(){
-        new NewGameJoinGUI(this);
+    public static void actionJoinGame(){
+        new NewGameJoinGUI();
     }
     
-    public void actionQuitGame(){
+    public static void actionQuitGame(){
         int selected = JOptionPane.showConfirmDialog(null, 
                 "Are you sure you would like to quit?", "Quit Game", JOptionPane.YES_NO_OPTION);
         if(selected == JOptionPane.YES_OPTION){
@@ -76,11 +76,11 @@ public class MainController {
         }
     }
     
-    public void actionAbout(){
+    public static void actionAbout(){
         JOptionPane.showMessageDialog(null, GameConstants.ABOUT, GameConstants.TITLE, JOptionPane.INFORMATION_MESSAGE);
     }
     
-    public void actionPlaceBoat(){
+    public static void actionPlaceBoat(){
         if(isValidSpot()){
             GameAssets.setIsPlaced(GameAssets.getSelected(), true, GameAssets.isOriented());
             GameAssets.setShipCoordinates(GameAssets.getMouseXY()[0] * GameConstants.TILE_SIZE,
@@ -100,7 +100,7 @@ public class MainController {
         }
     }
     
-    public void actionEndTurn(){
+    public static void actionEndTurn(){
         if(gui.getEndTurnButton().getText().equals("Ready!")){
             GameAssets.setState(GameConstants.STATE_WAITING);
             gui.setEndTurn(false);
@@ -121,7 +121,7 @@ public class MainController {
         }               
     }
     
-    public void actionPlaceTarget(){
+    public static void actionPlaceTarget(){
         if(GameAssets.isTurn() && GameAssets.getState() == GameConstants.STATE_GAME){
             int x = GameAssets.getMouseXY()[0] * GameConstants.TILE_SIZE;
             int y = GameAssets.getMouseXY()[1] * GameConstants.TILE_SIZE;
@@ -149,7 +149,7 @@ public class MainController {
      * @param y
      * @return 
      */
-    private boolean isValidTargetSpot(int x, int y){
+    private static boolean isValidTargetSpot(int x, int y){
         if(GameAssets.getTileState(x, y) != GameConstants.TILE_STATE_EMPTY){
             return false;
         }
@@ -168,7 +168,7 @@ public class MainController {
      * @param mouseY
      * @return 
      */
-    private int[][] getSelectedShipCoordinates(int mouseX, int mouseY){
+    private static int[][] getSelectedShipCoordinates(int mouseX, int mouseY){
         int [][] shipCoordinates;
         shipCoordinates = new int[GameConstants.SIZES[GameAssets.getSelected()]][2];
         
@@ -190,7 +190,7 @@ public class MainController {
      * @param coords
      * @return 
      */
-    private boolean doesShipIntersect(int [][] coords){
+    private static boolean doesShipIntersect(int [][] coords){
         for(int i = 0; i < GameConstants.SHIPS.length; i++){
             if(GameAssets.getIsPlaced()[i][0]){
                 for(int m = 0; m < GameConstants.SIZES[i]; m ++){
@@ -219,7 +219,7 @@ public class MainController {
      * Checks whether this spot is valid for ship placement.
      * @return 
      */
-    private boolean isValidSpot() {
+    private static boolean isValidSpot() {
         int mouseX = GameAssets.getMouseXY()[0] * GameConstants.TILE_SIZE;
         int mouseY = GameAssets.getMouseXY()[1] * GameConstants.TILE_SIZE;
 
@@ -238,33 +238,33 @@ public class MainController {
         return true;
     }
     
-    private void errorCannotPlaceShipThere(){
+    private static void errorCannotPlaceShipThere(){
         JOptionPane.showMessageDialog(null, GameConstants.ERROR_CANNOT_PLACE_SHIP, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
-    private void errorCannotTargetThere(){
+    private static void errorCannotTargetThere(){
         JOptionPane.showMessageDialog(null, GameConstants.ERROR_CANNOT_TARGET_THERE, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
-    private void errorAlreadyTargeted(){
+    private static void errorAlreadyTargeted(){
         JOptionPane.showMessageDialog(null, GameConstants.ERROR_ALREADY_TARGETED, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
-    private void errorNoTarget(){
+    private static void errorNoTarget(){
         JOptionPane.showMessageDialog(null, GameConstants.ERROR_NO_TARGET, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
-    private void boatSetupComplete(){
+    private static void boatSetupComplete(){
         gui.stateBoatSetupComplete();
         gui.addText("Boats placed. When ready press 'Ready!'");
     }
     
-    private void createServer(){
+    private static void createServer(){
         gui.stateHostingServer();
         hostGame();
     }
     
-    public void attemptConnection(String ip){
+    public static void attemptConnection(String ip){
         gui.addText("Establishing connection...");
         if(Client.connectToServer(ip)){
             gui.stateCanDisconnectFromServer();
@@ -275,11 +275,11 @@ public class MainController {
         }
     }
     
-    public void refreshCursorGraphics(){
+    public static void refreshCursorGraphics(){
         gui.getGamePanel().repaint();
     }
     
-    public void hostGame(){
+    public static void hostGame(){
         if(!Server.isRunning()){
             Server.init();
             chatMessageReceived("Server started.", "SERVER");
@@ -288,12 +288,12 @@ public class MainController {
 
     }
     
-    public void setName(String g){
+    public static void setName(String g){
         GameAssets.setNickname(g);
     }
 
     /* TODO. fix shit. */
-    public void disconnectFromServer(){
+    public static void disconnectFromServer(){
         try{
             Client.disconnectFromServer();
         }catch(Exception e){}
@@ -302,24 +302,23 @@ public class MainController {
         gui.disableChat();
     }
     
-    public void stopServer(){
+    public static void stopServer(){
         gui.stateNotHostingServer();
         Server.shutdown();
-        if(GameAssets.getClient() != null){
-            gui.stateDisconnectedFromServer();
-        }
+        gui.stateDisconnectedFromServer();
+        gui.addText("Server stopped.");
     }
     
-    public void refreshShipScreen(){
+    public static void refreshShipScreen(){
         ImageIcon scaledImage;
         System.out.println(GameAssets.getSelected());
         if(GameAssets.isOriented()){
             scaledImage = scaleImage(gui.getShipScreen(),
-                    new ImageIcon(BoatWars.PATH + GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelected()] + "0" + ".png"));
+                    new ImageIcon(ClassLoader.getSystemResource(GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelected()] + "0" + ".png")));
         }
         else{
             scaledImage = scaleImage(gui.getShipScreen(),
-                    new ImageIcon(BoatWars.PATH + GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelected()] + ".png"));
+                    new ImageIcon(GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelected()] + ".png"));
         }
         gui.getShipScreen().setIcon(scaledImage);
         gui.getGamePanel().repaint();
@@ -475,7 +474,7 @@ public class MainController {
         GameAssets.setSelected((byte)0);
         GameAssets.resetShipVariables();
         ImageIcon scaledImage = scaleImage(gui.getShipScreen(), 
-                new ImageIcon(BoatWars.PATH + GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelected()] + ".png"));
+                new ImageIcon(ClassLoader.getSystemResource(GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelected()] + ".png")));
         gui.getShipScreen().setIcon(scaledImage);
         gui.drawGameMap();
     }

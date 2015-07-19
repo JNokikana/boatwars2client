@@ -39,7 +39,6 @@ public class GameConstants {
     public final static int TIMEOUT = 4000;
     
     public final static String PATH_GRAPHICS = File.separator + "Data" + File.separator + "Graphics" + File.separator;
-    public final static String PATH_SOUND = "Data" + File.separator + "Sound";
     
     public final static String MUSIC_THEME = "theme.wav";
     

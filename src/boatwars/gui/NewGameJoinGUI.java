@@ -9,8 +9,7 @@ import javax.swing.JOptionPane;
 public class NewGameJoinGUI extends javax.swing.JFrame implements ActionListener{
     private MainController controller;
     
-    public NewGameJoinGUI(MainController controller){
-        this.controller = controller;
+    public NewGameJoinGUI(){
         initComponents();
         initCustomComponents();
     }
@@ -29,8 +28,8 @@ public class NewGameJoinGUI extends javax.swing.JFrame implements ActionListener
     public void actionPerformed(ActionEvent e){
         if(e.getActionCommand().equals("joingame") && this.nameField.getText().length() > 0){
             dispose();
-            controller.setName(nameField.getText());
-            controller.attemptConnection(this.ipField.getText());
+            MainController.setName(nameField.getText());
+            MainController.attemptConnection(this.ipField.getText());
         }
         else{
             nameInvalid();

@@ -1,9 +1,9 @@
 package boatwars.gui;
 
 import boatwars.controller.MainController;
-import boatwars.main.BoatWars;
 import boatwars.util.GameConstants;
 import boatwars.util.GameAssets;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -12,7 +12,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,7 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionListener{
-    private MainController mainController;
     private GameAssets assets;
     
     private JMenuBar menuBar;
@@ -120,8 +118,8 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
     
     private void drawMenuScreen(){
         this.chatField.setEnabled(false);
-        mainController.drawPlateScreen();
-        mainController.drawShipPlate();
+        MainController.drawPlateScreen();
+        MainController.drawShipPlate();
     }
     
     public GamePanel getGamePanel(){
@@ -190,7 +188,8 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
         initButtons();
         initMenuBars();
         setName("Main");
-        setIconImage(new ImageIcon(BoatWars.PATH + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_MENU).getImage());
+        System.out.println(ClassLoader.getSystemResource(""));
+        setIconImage(new ImageIcon("").getImage());
         setJMenuBar(menuBar);
         addWindowListener(new WindowListener(){
             @Override
@@ -198,7 +197,7 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
             @Override
             public void windowClosing(WindowEvent e){
                 if(e.getWindow().getName().equals("Main")){
-                    mainController.actionQuitGame();
+                    MainController.actionQuitGame();
                 }
             }
             @Override
@@ -229,7 +228,7 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
 
     @Override
     public void keyReleased(KeyEvent k){
-        mainController.keyPress(k);
+        MainController.keyPress(k);
     }
 
     @Override
@@ -239,28 +238,28 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
     public void actionPerformed(ActionEvent e){
         switch (e.getActionCommand()) {
             case "hostgame":
-                mainController.actionHostGame();
+                MainController.actionHostGame();
                 break;
             case "disconnect":
-                mainController.disconnectFromServer();
+                MainController.disconnectFromServer();
                 break;
             case "joingame":
-                mainController.actionJoinGame();
+                MainController.actionJoinGame();
                 break;
             case "about":
-                mainController.actionAbout();
+                MainController.actionAbout();
                 break;
             case "quitgame":
-                mainController.actionQuitGame();
+                MainController.actionQuitGame();
                 break;
             case "stopserver":
-                mainController.stopServer();
+                MainController.stopServer();
                 break;
             case "orientation":
-                mainController.actionOrientation();
+                MainController.actionOrientation();
                 break;
             case "endturn":
-                mainController.actionEndTurn();
+                MainController.actionEndTurn();
                 break;
         }
     }
@@ -273,9 +272,9 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
                 int x = (e.getPoint().x / GameConstants.TILE_SIZE);
                 int y = (e.getPoint().y  / GameConstants.TILE_SIZE);
 
-                if(assets.getMouseXY()[0] != x || assets.getMouseXY()[1] != y){
-                    assets.setMouseXY(x, y);
-                    mainController.refreshCursorGraphics();
+                if(GameAssets.getMouseXY()[0] != x || GameAssets.getMouseXY()[1] != y){
+                    GameAssets.setMouseXY(x, y);
+                    MainController.refreshCursorGraphics();
                 }
             }
         }
@@ -283,10 +282,10 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
         @Override
         public void mousePressed(MouseEvent e){
             if(GameAssets.getState() == GameConstants.STATE_PLACING_BOATS && !GameAssets.allPlaced()){
-                mainController.actionPlaceBoat();
+                MainController.actionPlaceBoat();
             }
             else if(GameAssets.getState() == GameConstants.STATE_GAME){
-                mainController.actionPlaceTarget();
+                MainController.actionPlaceTarget();
             }
         }
     }

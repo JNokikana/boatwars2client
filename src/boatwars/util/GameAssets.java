@@ -107,7 +107,7 @@ public class GameAssets {
         return destroyedShips[i];
     }
     
-    public void setMouseXY(int x, int y){
+    public static void setMouseXY(int x, int y){
         mouseXY[0] = x;
         mouseXY[1] = y;
     }

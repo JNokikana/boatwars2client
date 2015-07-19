@@ -1,4 +1,4 @@
-package boatwars.main;
+package boatwars;
 
 import boatwars.gui.MainGUI;
 import boatwars.util.GameAssets;
@@ -9,13 +9,14 @@ public class BoatWars {
     public static String PATH;
 
     public static void main(String[] args) {
-        try{
-            PATH = new File("").getCanonicalPath();
-        }catch(Exception e){}
         init();
     }
     
     private static void init(){
+        try{
+            PATH = new File("").getCanonicalPath();
+        }catch(Exception e){}
+
         GameAssets.initialize();
         new MainGUI();
     }

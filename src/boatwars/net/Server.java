@@ -22,11 +22,11 @@ public class Server{
         try{
             connections = new ArrayList<ConnectionHandler>();
             connectionListener = new ConnectionListener();
+            connectionPool = Executors.newFixedThreadPool(GameConstants.MAX_PLAYERS);
             connectionListener.start();
         }catch(Exception e){
             e.printStackTrace();
         }
-        connectionPool = Executors.newFixedThreadPool(2);
     }
 
     public static boolean isRunning(){
