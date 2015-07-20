@@ -29,6 +29,10 @@ public class Server{
         }
     }
 
+    public static List<ConnectionHandler> getConnections(){
+        return connections;
+    }
+
     public static boolean isRunning(){
         return listening;
     }

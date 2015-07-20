@@ -1,17 +1,22 @@
 package boatwars.net;
 
+import boatwars.util.GameAssets;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class ConnectionHandler extends Thread{
     private Socket client;
     private boolean running;
-    private ObjectInputStream input;
+    private BufferedReader input;
+    private String readData;
     
     public ConnectionHandler(Socket client){
         try{
             this.client = client;
-            input = new ObjectInputStream(client.getInputStream());
+            input = new BufferedReader(new InputStreamReader(client.getInputStream()));
             running = true;
         }catch(Exception e){
 
@@ -32,7 +37,7 @@ public class ConnectionHandler extends Thread{
         running = false;
     }
 
-    public void handleRequest(String [] data){
+    public void handleRequest(MessageObject data){
 
     }
     
@@ -41,14 +46,8 @@ public class ConnectionHandler extends Thread{
         try{
 
             while(running){
-                if(input.read() != -1){
-                    String[] inputMessage = null;
-                    inputMessage = (String[])input.readObject();
-                    handleRequest(inputMessage);
-                }
-                else{
-                    disconnectFromClient();
-                }
+                while((readData = input.readLine()) != null){
+                    handleRequest(GameAssets.getGson().fromJson(readData, MessageObject.class));
 //                if (inputMessage[0].equals(GameConstants.REQUEST_CLIENT_BYE)) {
 //                    stopRunning();
 //                } else if (inputMessage[0].equals(GameConstants.REQUEST_READY)) {
@@ -58,6 +57,11 @@ public class ConnectionHandler extends Thread{
 //                    }
 //                }
 //                server.receiveJPData(inputMessage);
+                }
+
+                if(input.read() == -1){
+                    disconnectFromClient();
+                }
             }
         }catch(Exception e){
             e.printStackTrace();

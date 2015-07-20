@@ -2,6 +2,7 @@ package boatwars.util;
 
 import boatwars.net.Client;
 import boatwars.net.Server;
+import com.google.gson.Gson;
 
 public class GameAssets {
     private static byte gameState;
@@ -17,6 +18,7 @@ public class GameAssets {
     private static boolean allPlaced;
     private static boolean targetPlaced;
     private static boolean isTurn;
+    private static Gson gson;
     /* The coordinates of the tile that you wish to target. */
     private static int [][] targetCoords;
     /* Tells whether the indicated space has been hit or not. The last value indicates whether
@@ -33,6 +35,7 @@ public class GameAssets {
         gameState = GameConstants.STATE_MENU;
         grid = false;
         oriented = false;
+        gson = new Gson();
         resetShipVariables();
     }
     
@@ -105,6 +108,10 @@ public class GameAssets {
     
     public static boolean isShipDestroyed(int i){
         return destroyedShips[i];
+    }
+
+    public static Gson getGson(){
+        return gson;
     }
     
     public static void setMouseXY(int x, int y){
