@@ -1,8 +1,9 @@
 package boatwars.net;
 
 import boatwars.controller.MainController;
+import boatwars.util.GameAssets;
 import boatwars.util.GameConstants;
-import java.io.ObjectOutputStream;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import java.util.concurrent.Executors;
 public class Server{
     private static ServerSocket server;
     private static ConnectionListener connectionListener;
-    private ObjectOutputStream outgoing;
     private static ExecutorService connectionPool;
     private static List<ConnectionHandler> connections;
     private static boolean listening;
@@ -25,6 +25,7 @@ public class Server{
             connectionPool = Executors.newFixedThreadPool(GameConstants.MAX_PLAYERS);
             connectionListener.start();
         }catch(Exception e){
+            shutdown();
             e.printStackTrace();
         }
     }
@@ -43,28 +44,30 @@ public class Server{
             server.close();
             connectionPool.shutdown();
         }catch(Exception e){
-
+            e.printStackTrace();
         }
     }
 
     /**
-     * A utility inner class that contains the available replies that gives.
+     * A utility inner class that contains the available replies that the server gives.
      */
     private static class ReplyHandler{
-        public static void sendMessageToClients(ConnectionHandler client, String message){
 
+        public static void broadcastToAll(List<ConnectionHandler> clients, String type, String text){
+            System.out.println("PASkaa");
+            MessageObject message = new MessageObject(type, text, "SERVER");
+            for(int i = 0; i < clients.size(); i ++){
+                clients.get(i).getOutput().printf(GameAssets.getGson().toJson(message));
+            }
         }
 
-        public static void closeConnection(Socket client, String[]data){
+        public static void closeConnection(ConnectionHandler client, String message){
             try{
-                ObjectOutputStream stream = new ObjectOutputStream(client.getOutputStream());
-                stream.writeObject(data);
-                stream.flush();
-
-                stream.close();
-                client.close();
+                MessageObject object = new MessageObject(GameConstants.REQUEST_DISCONNECT, message, "SERVER");
+                client.getOutput().printf(GameAssets.getGson().toJson(object));
+                client.disconnectFromClient();
             }catch(Exception e){
-
+                e.printStackTrace();
             }
         }
     }
@@ -89,18 +92,20 @@ public class Server{
                 startListening();
 
                 while(listening){
-                    Socket client = server.accept();
-                    if(GameConstants.MAX_PLAYERS >= connections.size()){
-                        ReplyHandler.closeConnection(client, new String[]{GameConstants.REQUEST_DISCONNECT, "Paskaa perseeseen", "SERVER"});
+                    ConnectionHandler client = new ConnectionHandler(server.accept());
+                    if(connections.size() >= GameConstants.MAX_PLAYERS){
+                        ReplyHandler.closeConnection(client, "Paskaa perseeseen");
                     }
                     else{
-                        connections.add(new ConnectionHandler(client));
-                        MainController.chatMessageReceived(client.getInetAddress().getHostAddress() + " connected.", "SERVER");
-                        connectionPool.execute(connections.get(connections.size() - 1));
+                        connections.add(client);
+                        MainController.chatMessageReceived(client.getClient().getInetAddress().getHostAddress() + " connected.", "SERVER");
+                        connectionPool.execute(client);
+                        ReplyHandler.broadcastToAll(connections, GameConstants.REQUEST_INFO, "Biiiitch!");
                     }
                 }
             }catch(Exception  e){
-
+                shutdown();
+                e.printStackTrace();
             }
         }
     }

@@ -292,8 +292,9 @@ public class MainController {
         GameAssets.setNickname(g);
     }
 
-    /* TODO. fix shit. */
     public static void disconnectFromServer(){
+        MainController.chatMessageReceived("Disconnecting..", "CLIENT");
+        System.out.println("Paskaa");
         try{
             Client.disconnectFromServer();
         }catch(Exception e){}
@@ -328,36 +329,36 @@ public class MainController {
         gui.addText("Could not connect to server");
     }
     
-    public static void chatMessageReceived(String message, String nickname){
+    public synchronized static void chatMessageReceived(String message, String nickname){
         gui.addText("[" + nickname + "]" + ": " + message);
     }
     
     public static void sendChatMessage(String message){
-        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_MESSAGE, message, GameAssets.getNickname()});
+//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_MESSAGE, message, GameAssets.getNickname()});
     }
     
     private static void sendEndTurnMessage(){
-        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_ENDTURN, GameAssets.getTargetCoords()[0][0] + "," + GameAssets.getTargetCoords()[0][1], String.valueOf(GameAssets.getPlayerId())});
+//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_ENDTURN, GameAssets.getTargetCoords()[0][0] + "," + GameAssets.getTargetCoords()[0][1], String.valueOf(GameAssets.getPlayerId())});
     }
     
     private static void sendReadyMessage(){
-        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_READY, GameConstants.MESSAGE_READY, GameAssets.getNickname()});
+//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_READY, GameConstants.MESSAGE_READY, GameAssets.getNickname()});
     }
     
     private static void sendHitMessage(String data){
-        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_HIT, data, GameAssets.getNickname()});
+//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_HIT, data, GameAssets.getNickname()});
     }
     
     private static void sendMissMessage(String data){
-        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_MISS, data, GameAssets.getNickname()});
+//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_MISS, data, GameAssets.getNickname()});
     }
     
     private static void sendSinkMessage(int shipIndex){
-        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_SUNK, GameConstants.SHIP_NAMES[shipIndex], String.valueOf(GameAssets.getPlayerId())});
+//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_SUNK, GameConstants.SHIP_NAMES[shipIndex], String.valueOf(GameAssets.getPlayerId())});
     }
     
     private static void sendGameOverMessage(){
-        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_ALL_DESTROYED, "", String.valueOf(GameAssets.getPlayerId())});
+//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_ALL_DESTROYED, "", String.valueOf(GameAssets.getPlayerId())});
     }
     
     public static void beginTurn(){

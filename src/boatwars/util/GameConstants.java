@@ -29,6 +29,7 @@ public class GameConstants {
     public final static String REQUEST_MISS = "MISS";
     public final static String REQUEST_ALL_DESTROYED = "YOU SUNK MY BATTLESHIPS!";
     public final static String REQUEST_SUNK = "SUNK";
+    public final static String REQUEST_INFO = "FYI";
     
     public final static byte TILE_STATE_EMPTY = 0;
     public final static byte TILE_STATE_MISS = 1;

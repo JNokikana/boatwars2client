@@ -4,16 +4,13 @@ import boatwars.controller.MainController;
 import boatwars.util.GameAssets;
 import boatwars.util.GameConstants;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
-public class Client extends Thread{
+public class Client{
     private static boolean running;
     private static Socket connection;
-    private static ObjectOutputStream out;
+    private static PrintWriter out;
     private static BufferedReader in;
     private static String address;
     private static ServerListener listener;
@@ -21,36 +18,49 @@ public class Client extends Thread{
     public static boolean connectToServer(String ad){
         try{
             if(!running){
-                connection = new Socket(address, GameConstants.PORT);
-                in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                out = new ObjectOutputStream(connection.getOutputStream());
                 address = ad;
-                listener = new ServerListener();
-
-                return true;
+                connection = new Socket(address, GameConstants.PORT);
+                if(connection.isConnected()){
+                    connection.setKeepAlive(true);
+                    connection.setTcpNoDelay(true);
+                    connection.setSoLinger(false, 0);
+                    in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    out = new PrintWriter(connection.getOutputStream(), true);
+                    listener = new ServerListener();
+                    return true;
+                }
             }
             else{
                 System.out.println("Already connected to server");
             }
         }catch(Exception e){
-
+            disconnectFromServer();
+            e.printStackTrace();
         }
         return false;
     }
 
+    private static void sendJoinRequest(){
+        System.out.println("Join request");
+        MessageObject message = new MessageObject(GameConstants.REQUEST_JOIN, "Hahaa!!", GameAssets.getNickname());
+        out.printf(GameAssets.getGson().toJson(message));
+    }
+
     public static void disconnectFromServer(){
         try{
-            listener.stopListening();
-            in.close();
-            connection.close();
-            MainController.chatMessageReceived("Disconnecting..", "CLIENT");
+            if(listener != null){
+                listener.stopListening();
+            }
+            if(connection != null){
+                connection.close();
+            }
         }catch(Exception e){
-
+            e.printStackTrace();
         }
     }
 
     private static class ServerListener extends Thread{
-        String readData = null;
+        String readData = "";
 
         public ServerListener(){
             running = true;
@@ -58,6 +68,8 @@ public class Client extends Thread{
         }
 
         private void parseJPData(MessageObject data){
+            System.out.println("Tavaraa");
+            System.out.println(data.getMessage());
 //            if(data.length == 3){
 //                switch(data[0]){
 //                    case GameConstants.REQUEST_MESSAGE:
@@ -128,26 +140,15 @@ public class Client extends Thread{
                         System.out.println(readData);
                         parseJPData(GameAssets.getGson().fromJson(readData, MessageObject.class));
                     }
-
-                    if (in.read() != -1) {
-                        disconnectFromServer();
-                    }
+                }
+                if (in.read() == -1) {
+                    System.out.println("asakas");
+                    disconnectFromServer();
                 }
             }
             catch(Exception e){
                 e.printStackTrace();
             }
-        }
-    }
-    
-    public void sendData(String[] data){
-        try{
-            if(!running){
-                out.writeObject(data);
-                out.flush();
-            }
-        }catch(Exception e){
-            e.printStackTrace();
         }
     }
 }

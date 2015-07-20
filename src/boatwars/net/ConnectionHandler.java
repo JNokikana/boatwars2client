@@ -5,30 +5,33 @@ import boatwars.util.GameAssets;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ConnectionHandler extends Thread{
     private Socket client;
     private boolean running;
     private BufferedReader input;
+    private PrintWriter output;
     private String readData;
     
     public ConnectionHandler(Socket client){
         try{
             this.client = client;
             input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            output = new PrintWriter(client.getOutputStream(), true);
             running = true;
         }catch(Exception e){
-
+            e.printStackTrace();
         }
     }
 
-    public void setClient(Socket c){
-        this.client = c;
-    }
-    
     public Socket getClient(){
         return this.client;
+    }
+
+    public synchronized PrintWriter getOutput(){
+        return output;
     }
 
     public void disconnectFromClient() throws Exception{
@@ -38,7 +41,8 @@ public class ConnectionHandler extends Thread{
     }
 
     public void handleRequest(MessageObject data){
-
+        System.out.println("asd");
+        System.out.println(data.getMessage());
     }
     
     @Override
@@ -47,6 +51,7 @@ public class ConnectionHandler extends Thread{
 
             while(running){
                 while((readData = input.readLine()) != null){
+                    System.out.println(readData);
                     handleRequest(GameAssets.getGson().fromJson(readData, MessageObject.class));
 //                if (inputMessage[0].equals(GameConstants.REQUEST_CLIENT_BYE)) {
 //                    stopRunning();

@@ -110,7 +110,7 @@ public class GameAssets {
         return destroyedShips[i];
     }
 
-    public static Gson getGson(){
+    public synchronized static Gson getGson(){
         return gson;
     }
     
