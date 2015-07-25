@@ -8,10 +8,13 @@ public class GameAssets {
     private static Client client;
     private static String nickname;
     private static boolean won;
-    private static byte playerId;
+    private static int playerId;
     private static boolean grid;
     private static byte selected;
     private static boolean oriented;
+    /**
+     * The origin coordinates of a ship.
+     */
     private static int [][] shipCoordinates;
     private static boolean allPlaced;
     private static boolean targetPlaced;
@@ -61,7 +64,7 @@ public class GameAssets {
         isPlaced[i][0] = placed;
         isPlaced[i][1] = oriented;
     }
-    
+
     public static void setShipCoordinates(int x, int y, int i){
         shipCoordinates[i][0] = x;
         shipCoordinates[i][1] = y;
@@ -84,7 +87,7 @@ public class GameAssets {
         return hitSpaces[x / GameConstants.TILE_SIZE][y / GameConstants.TILE_SIZE];
     }
     
-    public byte[][] getHitSpaces(){
+    public static byte[][] getHitSpaces(){
         return hitSpaces;
     }
     
@@ -92,7 +95,7 @@ public class GameAssets {
         return mouseXY;
     }
     
-    public boolean gameWon(){
+    public static boolean gameWon(){
         return won;
     }
     
@@ -152,7 +155,7 @@ public class GameAssets {
         grid = b;
     }
     
-    public static void setPlayerId(byte id){
+    public static void setPlayerId(int id){
         playerId = id;
     }
     
@@ -176,7 +179,7 @@ public class GameAssets {
         return gameState;
     }
     
-    public static byte getSelected(){
+    public static byte getSelectedShip(){
         return selected;
     }
     
@@ -197,7 +200,7 @@ public class GameAssets {
         return nickname;
     }
     
-    public static byte getPlayerId(){
+    public static int getPlayerId(){
         return playerId;
     }
 }

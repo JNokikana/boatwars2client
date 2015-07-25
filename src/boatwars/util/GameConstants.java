@@ -11,8 +11,14 @@ public class GameConstants {
     public final static byte STATE_WAITING = 2;
     public final static byte STATE_GAME = 3;
     public final static byte STATE_POST_MATCH = 4;
-    
-    public final static String WAITING_FOR_CONNECTION = "Setting up server....";
+
+    public static final int BORDER_PLAYER_ONE = 240;
+    public static final int BORDER_PLAYER_TWO = 216;
+
+    public static final int FIELD_Y_MAX = 216;
+    public static final int FIELD_X_MAX = 456;
+
+    public final static String INFO_MESSAGE_BEGIN = "Both players have joined. Place your boats.";
 
     public static final String CLIENT_NAME = "CLIENT";
 
@@ -31,7 +37,6 @@ public class GameConstants {
     public final static String REQUEST_MISS = "MISS";
     public final static String REQUEST_ALL_DESTROYED = "YOU SUNK MY BATTLESHIPS!";
     public final static String REQUEST_SUNK = "SUNK";
-    public final static String REQUEST_REFUSED = "FU";
     public final static String REQUEST_INFO = "INFO";
 
     public static final String INFO_DISCONNECTED = "Disconnected from server at ";

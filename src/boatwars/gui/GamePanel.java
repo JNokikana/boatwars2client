@@ -12,11 +12,6 @@ import javax.swing.JPanel;
 
 public class GamePanel extends JPanel{
     private String path;
-    private GameAssets assets;
-    
-    public GamePanel(GameAssets assets){
-        this.assets = assets;
-    }
     
     private void drawGraphics(Graphics2D g){
         try{
@@ -26,11 +21,11 @@ public class GamePanel extends JPanel{
         BufferedImage im = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         Graphics gf = im.getGraphics();
         
-        if(assets.getState() == GameConstants.STATE_MENU){
+        if(GameAssets.getState() == GameConstants.STATE_MENU){
             gf.drawImage(new ImageIcon(path + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_MENU).getImage(), 0, 0, null);
         }
-        else if(assets.getState() == GameConstants.STATE_POST_MATCH){
-            if(assets.gameWon()){
+        else if(GameAssets.getState() == GameConstants.STATE_POST_MATCH){
+            if(GameAssets.gameWon()){
                 gf.drawImage(new ImageIcon(path + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_WON).getImage(), 0, 0, null);
             }
             else{
@@ -40,8 +35,9 @@ public class GamePanel extends JPanel{
         else{
             drawGrid(gf);
             gf.setColor(Color.RED);
-            gf.drawRect(assets.getMouseXY()[0] * GameConstants.TILE_SIZE, 
-                    assets.getMouseXY()[1] * GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE);
+//            System.out.println(GameAssets.getMouseXY()[0] * GameConstants.TILE_SIZE + " " + GameAssets.getMouseXY()[1] * GameConstants.TILE_SIZE);
+            gf.drawRect(GameAssets.getMouseXY()[0] * GameConstants.TILE_SIZE,
+                    GameAssets.getMouseXY()[1] * GameConstants.TILE_SIZE, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE);
 
             positionBoats(gf);
             drawBoats(gf);
@@ -52,14 +48,14 @@ public class GamePanel extends JPanel{
     }
     
     private void drawTileState(Graphics g){
-        if(assets.getState() == GameConstants.STATE_GAME){
-            for(int i = 0; i < assets.getHitSpaces().length; i++){
-                for(int m = 0; m < assets.getHitSpaces()[0].length; m++){
-                    if(assets.getHitSpaces()[i][m] == GameConstants.TILE_STATE_HIT){
+        if(GameAssets.getState() == GameConstants.STATE_GAME){
+            for(int i = 0; i < GameAssets.getHitSpaces().length; i++){
+                for(int m = 0; m < GameAssets.getHitSpaces()[0].length; m++){
+                    if(GameAssets.getHitSpaces()[i][m] == GameConstants.TILE_STATE_HIT){
                         g.drawImage(new ImageIcon(path + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_HIT).getImage(),
                                 i * GameConstants.TILE_SIZE, m * GameConstants.TILE_SIZE, null);
                     } 
-                    else if(assets.getHitSpaces()[i][m] == GameConstants.TILE_STATE_MISS){
+                    else if(GameAssets.getHitSpaces()[i][m] == GameConstants.TILE_STATE_MISS){
                         g.drawImage(new ImageIcon(path + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_MISS).getImage(),
                                 i * GameConstants.TILE_SIZE, m * GameConstants.TILE_SIZE, null);
                     }
@@ -69,9 +65,9 @@ public class GamePanel extends JPanel{
     }
     
     private void drawTargetSpace(Graphics g){
-        if(assets.isTargetPlaced()){
-            g.drawImage(new ImageIcon(path + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_TARGET).getImage(), 
-                    assets.getTargetCoords()[0][0], assets.getTargetCoords()[0][1], null);
+        if(GameAssets.isTargetPlaced()){
+            g.drawImage(new ImageIcon(path + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_TARGET).getImage(),
+                    GameAssets.getTargetCoords()[0][0], GameAssets.getTargetCoords()[0][1], null);
         }
     }
     
@@ -85,7 +81,7 @@ public class GamePanel extends JPanel{
             gf.drawLine(x, 0, x, this.getHeight());
         }
         gf.setColor(new Color(0, 0, 0, (float)0.4));
-        if(assets.getPlayerId() == 0){
+        if(GameAssets.getPlayerId() == 0){
             gf.fillRect(0, 0, 240, 240);
         }
         else{
@@ -94,17 +90,17 @@ public class GamePanel extends JPanel{
     }
     
     private void positionBoats(Graphics gf){
-        if(assets.getState() == GameConstants.STATE_PLACING_BOATS && !assets.allPlaced()){
+        if(GameAssets.getState() == GameConstants.STATE_PLACING_BOATS && !GameAssets.allPlaced()){
             gf.setColor(new Color(0, 0, 0, (float)0.3));
-            for(int i = 0; i < GameConstants.SIZES[assets.getSelected()]; i++){
-                if(assets.isOriented()){
-                    gf.fillRect(assets.getMouseXY()[0] * GameConstants.TILE_SIZE + (i * GameConstants.TILE_SIZE),
-                            assets.getMouseXY()[1] * GameConstants.TILE_SIZE,
+            for(int i = 0; i < GameConstants.SIZES[GameAssets.getSelectedShip()]; i++){
+                if(GameAssets.isOriented()){
+                    gf.fillRect(GameAssets.getMouseXY()[0] * GameConstants.TILE_SIZE + (i * GameConstants.TILE_SIZE),
+                            GameAssets.getMouseXY()[1] * GameConstants.TILE_SIZE,
                             GameConstants.TILE_SIZE, GameConstants.TILE_SIZE);
                 } 
                 else{
-                    gf.fillRect(assets.getMouseXY()[0] * GameConstants.TILE_SIZE,
-                            assets.getMouseXY()[1] * GameConstants.TILE_SIZE + (i * GameConstants.TILE_SIZE),
+                    gf.fillRect(GameAssets.getMouseXY()[0] * GameConstants.TILE_SIZE,
+                            GameAssets.getMouseXY()[1] * GameConstants.TILE_SIZE + (i * GameConstants.TILE_SIZE),
                             GameConstants.TILE_SIZE, GameConstants.TILE_SIZE);
                 }
             }
@@ -112,13 +108,13 @@ public class GamePanel extends JPanel{
     }
     
     private void drawBoats(Graphics gf){
-        if(assets.getState() == GameConstants.STATE_PLACING_BOATS || assets.getState() == GameConstants.STATE_GAME){
+        if(GameAssets.getState() == GameConstants.STATE_PLACING_BOATS || GameAssets.getState() == GameConstants.STATE_GAME){
             for(int i = 0; i < GameConstants.SHIPS.length; i++){
-                if(assets.getIsPlaced()[i][0]){
-                    int x = assets.getShipCoordinates()[i][0];
-                    int y = assets.getShipCoordinates()[i][1];
+                if(GameAssets.getIsPlaced()[i][0]){
+                    int x = GameAssets.getShipCoordinates()[i][0];
+                    int y = GameAssets.getShipCoordinates()[i][1];
 
-                    if(assets.getIsPlaced()[i][1]){
+                    if(GameAssets.getIsPlaced()[i][1]){
                         gf.drawImage(new ImageIcon(path + GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[i]
                                 + "0" + ".png").getImage(), x, y, null);
                     } 

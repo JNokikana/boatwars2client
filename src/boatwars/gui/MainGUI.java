@@ -22,8 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionListener{
-    private GameAssets assets;
-    
     private JMenuBar menuBar;
     private JMenu menu;
     private JMenuItem menuItem;
@@ -281,7 +279,7 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
         scorePicture = new JLabel();
         chatField = new JTextField();
         fieldLabel = new JLabel();
-        gameScreen = new GamePanel(assets);
+        gameScreen = new GamePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);

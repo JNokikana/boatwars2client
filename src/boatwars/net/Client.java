@@ -27,7 +27,7 @@ public class Client{
                     in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     out = new PrintWriter(connection.getOutputStream(), true);
                     listener = new ServerListener();
-                    System.out.println("Yhteys!");
+                    sendJoinRequest();
                     return true;
                 }
             }
@@ -42,9 +42,8 @@ public class Client{
     }
 
     private static void sendJoinRequest(){
-        System.out.println("Join request");
-        MessageObject message = new MessageObject(GameConstants.REQUEST_JOIN, "Hahaa!!", GameAssets.getNickname());
-        out.printf(GameAssets.getGson().toJson(message));
+        MessageObject message = new MessageObject(GameConstants.REQUEST_JOIN, "", GameAssets.getNickname());
+        out.println(GameAssets.getGson().toJson(message));
     }
 
     public static void disconnectFromServer(){
@@ -71,8 +70,10 @@ public class Client{
         private void parseServerInput(MessageObject data){
             switch(data.getType()){
                 case GameConstants.REQUEST_INFO:
-                case GameConstants.REQUEST_REFUSED:
                     MainController.showMessage(data.getMessage(), data.getSender());
+                    break;
+                case GameConstants.REQUEST_BEGIN:
+                    MainController.stateGameBegin(data.getMessage());
                     break;
             }
 //            if(data.length == 3){
@@ -88,14 +89,14 @@ public class Client{
 //                        MainController.showMessage(message, data[2]);
 //                        GameAssets.setPlayerId(Integer.valueOf(data[1].substring(data[1].length() - 1)).byteValue());
 //                        MainController.showMessage("You are player " + (GameAssets.getPlayerId() + 1) + ".", "SERVER");
-//                        MainController.stateGameReady();
+//                        MainController.stateGameBegin();
 //                        break;
 //                    case GameConstants.REQUEST_READY:
 //                        MainController.showMessage("Player " + data[2] + " is ready.", "SERVER");
 //                        break;
 //                    case GameConstants.REQUEST_BEGIN:
 //                        MainController.showMessage("All players are ready. Let the boat wars begin!!", "SERVER");
-//                        MainController.stateGameBegun();
+//                        MainController.stateGameRunning();
 //                        break;
 //                    case GameConstants.REQUEST_ENDTURN:
 //                        if(!data[2].equals(String.valueOf(GameAssets.getPlayerId()))){

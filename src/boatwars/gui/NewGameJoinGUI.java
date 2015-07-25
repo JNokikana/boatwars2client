@@ -7,8 +7,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 public class NewGameJoinGUI extends javax.swing.JFrame implements ActionListener{
-    private MainController controller;
-    
     public NewGameJoinGUI(){
         initComponents();
         initCustomComponents();

@@ -70,9 +70,9 @@ public class MainController {
     
     public static void actionPlaceBoat(){
         if(isValidSpot()){
-            GameAssets.setIsPlaced(GameAssets.getSelected(), true, GameAssets.isOriented());
+            GameAssets.setIsPlaced(GameAssets.getSelectedShip(), true, GameAssets.isOriented());
             GameAssets.setShipCoordinates(GameAssets.getMouseXY()[0] * GameConstants.TILE_SIZE,
-                    GameAssets.getMouseXY()[1] * GameConstants.TILE_SIZE, GameAssets.getSelected());
+                    GameAssets.getMouseXY()[1] * GameConstants.TILE_SIZE, GameAssets.getSelectedShip());
             GameAssets.incSelected();
             if(GameAssets.allPlaced()){
                 boatSetupComplete();
@@ -121,7 +121,7 @@ public class MainController {
                     gui.getGamePanel().repaint();
                 } 
                 else{
-                    errorAlreadyTargeted();
+                    actionEndTurn();
                 }
             }
             else{
@@ -158,8 +158,7 @@ public class MainController {
      */
     private static int[][] getSelectedShipCoordinates(int mouseX, int mouseY){
         int [][] shipCoordinates;
-        shipCoordinates = new int[GameConstants.SIZES[GameAssets.getSelected()]][2];
-        
+        shipCoordinates = new int[GameConstants.SIZES[GameAssets.getSelectedShip()]][2];
         for(int i = 0; i < shipCoordinates.length; i++){
             if(GameAssets.isOriented()){
                 shipCoordinates[i][0] = mouseX + (GameConstants.TILE_SIZE * i);
@@ -174,12 +173,13 @@ public class MainController {
         return shipCoordinates;
     }
     /**
-     * Checks whether the ship to be placed collides with the coords in question.
+     * Checks whether the ship to be placed collides with other ships.
      * @param coords
      * @return 
      */
-    private static boolean doesShipIntersect(int [][] coords){
+    private static boolean shipIsCollisionFree(int[][] coords){
         for(int i = 0; i < GameConstants.SHIPS.length; i++){
+
             if(GameAssets.getIsPlaced()[i][0]){
                 for(int m = 0; m < GameConstants.SIZES[i]; m ++){
                     int thisX = GameAssets.getShipCoordinates()[i][0];
@@ -194,15 +194,37 @@ public class MainController {
                     
                     for(int r = 0; r < coords.length; r ++){
                         if(coords[r][0] == thisX && coords[r][1] == thisY){
-                            return true;
+                            return false;
                         }
                     }
                 }
             }
         }
         
-        return false;
+        return true;
     }
+
+    private static boolean shipIsOnValidZone(int[][] coords){
+        for(int i = 0; i < coords.length; i ++){
+            int shipX = coords[i][0];
+            int shipY = coords[i][1];
+
+            if(shipY > GameConstants.FIELD_Y_MAX ||
+                    shipX > GameConstants.FIELD_X_MAX ||
+                    shipX < 0 ||
+                    shipY < 0){
+                return false;
+            }
+
+            if((GameAssets.getPlayerId() == 0 &&
+                    shipX < GameConstants.BORDER_PLAYER_ONE) || (GameAssets.getPlayerId() == 1 &&
+                    shipX > GameConstants.BORDER_PLAYER_TWO)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Checks whether this spot is valid for ship placement.
      * @return 
@@ -213,29 +235,21 @@ public class MainController {
 
         int[][] shipCoordinates = getSelectedShipCoordinates(mouseX, mouseY);
 
-        if (GameAssets.getPlayerId() == 0) {
-            if (mouseX < 240 || doesShipIntersect(shipCoordinates)) {
-                return false;
-            }
-        } else {
-            if (mouseX >= 240 || doesShipIntersect(shipCoordinates)) {
-                return false;
-            }
+        if((GameAssets.getPlayerId() == 0 &&
+                mouseX < GameConstants.BORDER_PLAYER_ONE) || (GameAssets.getPlayerId() == 1 &&
+                mouseX > GameConstants.BORDER_PLAYER_TWO)){
+            return false;
         }
 
-        return true;
+        return shipIsCollisionFree(shipCoordinates) && shipIsOnValidZone(shipCoordinates);
     }
     
     private static void errorCannotPlaceShipThere(){
-        JOptionPane.showMessageDialog(null, GameConstants.ERROR_CANNOT_PLACE_SHIP, "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, GameConstants.ERROR_CANNOT_PLACE_SHIP, "Info", JOptionPane.INFORMATION_MESSAGE);
     }
     
     private static void errorCannotTargetThere(){
-        JOptionPane.showMessageDialog(null, GameConstants.ERROR_CANNOT_TARGET_THERE, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    
-    private static void errorAlreadyTargeted(){
-        JOptionPane.showMessageDialog(null, GameConstants.ERROR_ALREADY_TARGETED, "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, GameConstants.ERROR_CANNOT_TARGET_THERE, "Info", JOptionPane.INFORMATION_MESSAGE);
     }
     
     private static void errorNoTarget(){
@@ -268,7 +282,6 @@ public class MainController {
 
     public static void disconnectFromServer(){
         MainController.showMessage("Disconnecting..", "CLIENT");
-        System.out.println("Paskaa");
         try{
             Client.disconnectFromServer();
         }catch(Exception e){}
@@ -279,14 +292,13 @@ public class MainController {
     
     public static void refreshShipScreen(){
         ImageIcon scaledImage;
-        System.out.println(GameAssets.getSelected());
         if(GameAssets.isOriented()){
             scaledImage = scaleImage(gui.getShipScreen(),
-                    new ImageIcon(ClassLoader.getSystemResource(GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelected()] + "0" + ".png")));
+                    new ImageIcon(BoatWars.PATH + GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelectedShip()] + "0" + ".png"));
         }
         else{
             scaledImage = scaleImage(gui.getShipScreen(),
-                    new ImageIcon(GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelected()] + ".png"));
+                    new ImageIcon(BoatWars.PATH + GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelectedShip()] + ".png"));
         }
         gui.getShipScreen().setIcon(scaledImage);
         gui.getGamePanel().repaint();
@@ -434,7 +446,10 @@ public class MainController {
         return imageToScale;
     }
     
-    public static void stateGameReady(){
+    public static void stateGameBegin(String id){
+        GameAssets.setPlayerId(Integer.valueOf(id));
+        gui.addText("You are player " + id + ".");
+        gui.addText(GameConstants.INFO_MESSAGE_BEGIN);
         GameAssets.setState(GameConstants.STATE_PLACING_BOATS);
         gui.setMessageLabel(GameAssets.getNickname());
         gui.setChangeOrientation(true);
@@ -442,12 +457,12 @@ public class MainController {
         GameAssets.setSelected((byte)0);
         GameAssets.resetShipVariables();
         ImageIcon scaledImage = scaleImage(gui.getShipScreen(), 
-                new ImageIcon(ClassLoader.getSystemResource(GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelected()] + ".png")));
+                new ImageIcon(BoatWars.PATH + GameConstants.PATH_GRAPHICS + GameConstants.SHIPS[GameAssets.getSelectedShip()] + ".png"));
         gui.getShipScreen().setIcon(scaledImage);
         gui.drawGameMap();
     }
     
-    public static void stateGameBegun(){
+    public static void stateGameRunning(){
         gui.setEndTurn(true);
         if(GameAssets.getPlayerId() == 0){
             GameAssets.setTurn(true);
