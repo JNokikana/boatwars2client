@@ -4,7 +4,6 @@ import boatwars.BoatWars;
 import boatwars.gui.MainGUI;
 import boatwars.gui.NewGameJoinGUI;
 import boatwars.net.Client;
-import boatwars.net.Server;
 import boatwars.util.GameAssets;
 import boatwars.util.GameConstants;
 
@@ -46,17 +45,6 @@ public class MainController {
     private static void showServerNotice(){
         JOptionPane.showMessageDialog(null, "To play online you must open port " + GameConstants.PORT + " "
                 + " from your router settings.", "Start Server", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    public static void actionHostGame(){
-        showServerNotice();
-        if (Server.isRunning()) {
-            try {
-                stopServer();
-            } catch (Exception er) {
-            }
-        }
-        createServer();
     }
     
     public static void actionOrientation(){
@@ -259,11 +247,6 @@ public class MainController {
         gui.addText("Boats placed. When ready press 'Ready!'");
     }
     
-    private static void createServer(){
-        gui.stateHostingServer();
-        hostGame();
-    }
-    
     public static void attemptConnection(String ip){
         gui.addText("Establishing connection...");
         if(Client.connectToServer(ip)){
@@ -279,15 +262,6 @@ public class MainController {
         gui.getGamePanel().repaint();
     }
     
-    public static void hostGame(){
-        if(!Server.isRunning()){
-            Server.init();
-            chatMessageReceived("Server started.", "SERVER");
-            chatMessageReceived("Server is waiting for clients to join...", "SERVER");
-        }
-
-    }
-    
     public static void setName(String g){
         GameAssets.setNickname(g);
     }
@@ -301,13 +275,6 @@ public class MainController {
         
         gui.stateDisconnectedFromServer();
         gui.disableChat();
-    }
-    
-    public static void stopServer(){
-        gui.stateNotHostingServer();
-        Server.shutdown();
-        gui.stateDisconnectedFromServer();
-        gui.addText("Server stopped.");
     }
     
     public static void refreshShipScreen(){

@@ -1,12 +1,10 @@
 package boatwars.util;
 
 import boatwars.net.Client;
-import boatwars.net.Server;
 import com.google.gson.Gson;
 
 public class GameAssets {
     private static byte gameState;
-    private static Server server;
     private static Client client;
     private static String nickname;
     private static boolean won;
@@ -154,16 +152,8 @@ public class GameAssets {
         grid = b;
     }
     
-    public boolean isHost(){
-        return server != null;
-    }
-    
     public static void setPlayerId(byte id){
         playerId = id;
-    }
-    
-    public void setServer(Server server){
-        server = server;
     }
     
     public void setClient(Client client){
@@ -176,10 +166,6 @@ public class GameAssets {
     
     public static void setNickname(String nick){
         nickname = nick;
-    }
-    
-    public Server getServer(){
-        return server;
     }
     
     public static Client getClient(){

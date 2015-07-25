@@ -27,6 +27,7 @@ public class Client{
                     in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     out = new PrintWriter(connection.getOutputStream(), true);
                     listener = new ServerListener();
+                    System.out.println("Yhteys!");
                     return true;
                 }
             }
@@ -64,7 +65,7 @@ public class Client{
 
         public ServerListener(){
             running = true;
-            start();
+            this.start();
         }
 
         private void parseJPData(MessageObject data){
@@ -136,14 +137,15 @@ public class Client{
         public void run(){
             try{
                 while (running) {
+                    System.out.println("Lukee!!");
                     while((readData = in.readLine()) != null){
                         System.out.println(readData);
                         parseJPData(GameAssets.getGson().fromJson(readData, MessageObject.class));
                     }
-                }
-                if (in.read() == -1) {
-                    System.out.println("asakas");
-                    disconnectFromServer();
+                    if (in.read() == -1) {
+                        System.out.println("asakas");
+                        disconnectFromServer();
+                    }
                 }
             }
             catch(Exception e){

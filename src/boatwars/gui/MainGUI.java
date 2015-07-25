@@ -162,20 +162,6 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
        
         menuBar.add(menu);
         
-        menu = new JMenu("Server");
-        menuItem = new JMenuItem("Host a Server");
-        menuItem.setActionCommand("hostgame");
-        menuItem.addActionListener(this);
-        menu.add(menuItem);
-        
-        menuItem = new JMenuItem("Stop Server");
-        menuItem.setActionCommand("stopserver");
-        menuItem.addActionListener(this);
-        menuItem.setEnabled(false);
-        menu.add(menuItem);
-        
-        menuBar.add(menu);
-        
         JButton specialButton = new JButton("About");
         specialButton.setActionCommand("about");
         specialButton.addActionListener(this);
@@ -237,9 +223,6 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
     @Override
     public void actionPerformed(ActionEvent e){
         switch (e.getActionCommand()) {
-            case "hostgame":
-                MainController.actionHostGame();
-                break;
             case "disconnect":
                 MainController.disconnectFromServer();
                 break;
@@ -251,9 +234,6 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
                 break;
             case "quitgame":
                 MainController.actionQuitGame();
-                break;
-            case "stopserver":
-                MainController.stopServer();
                 break;
             case "orientation":
                 MainController.actionOrientation();

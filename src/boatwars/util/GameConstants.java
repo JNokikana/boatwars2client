@@ -83,7 +83,6 @@ public class GameConstants {
     public final static String[] SHIP_NAMES = {"Destroyer", "Submarine", "Cruiser", "Battleship", "Carrier"};
     
     public final static String WELCOME = "Welcome to BoatWars! Select"
-            + " 'Join Game' from the 'New Game'-menu to start playing or select 'Server' to create a new server for"
-            + " players to play in!\n-----------------------------"
+            + " 'Join Game' from the 'New Game'-menu to start playing!\n-----------------------------"
             + "------------------------------";
 }
