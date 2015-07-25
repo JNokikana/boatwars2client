@@ -333,7 +333,7 @@ public class MainController {
         if(thisId != GameAssets.getPlayerId()){
             GameAssets.setTurn(true);
             gui.setEndTurn(true);
-            showMessage("'" + GameAssets.getNickname() + " its your turn." + "'", GameConstants.CLIENT_NAME);
+            showMessage(GameAssets.getNickname() + " its your turn.", GameConstants.CLIENT_NAME);
         }
     }
     
@@ -439,7 +439,7 @@ public class MainController {
     
     public static void stateGameBegin(String id){
         GameAssets.setPlayerId(Integer.valueOf(id));
-        gui.addText("You are player " + id + ".");
+        gui.addText("You are player " + (GameAssets.getPlayerId() + 1) + ".");
         gui.addText(GameConstants.INFO_MESSAGE_BEGIN);
         GameAssets.setState(GameConstants.STATE_PLACING_BOATS);
         gui.setMessageLabel(GameAssets.getNickname());

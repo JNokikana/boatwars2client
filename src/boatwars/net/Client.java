@@ -57,7 +57,7 @@ public class Client{
     }
 
     public static void sendTargetMessage(int x, int y){
-        MessageObject message = new MessageObject(GameConstants.REQUEST_ENDTURN, "", GameAssets.getNickname());
+        MessageObject message = new MessageObject(GameConstants.REQUEST_ENDTURN, String.valueOf(GameAssets.getPlayerId()), GameAssets.getNickname());
         message.setX(x);
         message.setY(y);
         out.println(GameAssets.getGson().toJson(message));
