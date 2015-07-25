@@ -38,6 +38,7 @@ public class GameConstants {
     public final static String REQUEST_ALL_DESTROYED = "YOU SUNK MY BATTLESHIPS!";
     public final static String REQUEST_SUNK = "SUNK";
     public final static String REQUEST_INFO = "INFO";
+    public final static String REQUEST_GAMEPLAY_START = "GAMEON";
 
     public static final String INFO_DISCONNECTED = "Disconnected from server at ";
     

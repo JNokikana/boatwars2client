@@ -7,6 +7,8 @@ public class MessageObject {
     private String type;
     private String message;
     private String sender;
+    private int x;
+    private int y;
 
     public MessageObject(String type, String message, String sender){
         this.type = type;
@@ -36,5 +38,21 @@ public class MessageObject {
 
     public void setSender(String sender) {
         this.sender = sender;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

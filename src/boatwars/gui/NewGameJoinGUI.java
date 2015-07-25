@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 public class NewGameJoinGUI extends javax.swing.JFrame implements ActionListener{
+    private static final int NAME_MAX_LENGTH = 64;
+
     public NewGameJoinGUI(){
         initComponents();
         initCustomComponents();
@@ -18,13 +20,17 @@ public class NewGameJoinGUI extends javax.swing.JFrame implements ActionListener
         this.nameField.setText(GameConstants.DEFAULT_NAME);
         this.joinGame.setActionCommand("joingame");
         this.joinGame.addActionListener(this);
+        getRootPane().setDefaultButton(joinGame);
         setLocationRelativeTo(null);
         setVisible(true);
     }
     
     @Override
     public void actionPerformed(ActionEvent e){
-        if(e.getActionCommand().equals("joingame") && this.nameField.getText().length() > 0){
+        if(e.getActionCommand().equals("joingame") &&
+                this.nameField.getText().length() > 0 &&
+                this.nameField.getText().length() <= NAME_MAX_LENGTH &&
+                !this.ipField.getText().isEmpty()){
             dispose();
             MainController.setName(nameField.getText());
             MainController.attemptConnection(this.ipField.getText());
@@ -35,7 +41,7 @@ public class NewGameJoinGUI extends javax.swing.JFrame implements ActionListener
     }
     
     private void nameInvalid(){
-        JOptionPane.showMessageDialog(null, "That name is too short!", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "One or both of the fields have invalid values.", "Error", JOptionPane.ERROR_MESSAGE);
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

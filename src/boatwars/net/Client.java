@@ -46,6 +46,23 @@ public class Client{
         out.println(GameAssets.getGson().toJson(message));
     }
 
+    public static void sendReadyMessage(){
+        MessageObject message = new MessageObject(GameConstants.REQUEST_READY, "", GameAssets.getNickname());
+        out.println(GameAssets.getGson().toJson(message));
+    }
+
+    public static void sendChatMessage(String text){
+        MessageObject message = new MessageObject(GameConstants.REQUEST_MESSAGE, text, GameAssets.getNickname());
+        out.println(GameAssets.getGson().toJson(message));
+    }
+
+    public static void sendTargetMessage(int x, int y){
+        MessageObject message = new MessageObject(GameConstants.REQUEST_ENDTURN, "", GameAssets.getNickname());
+        message.setX(x);
+        message.setY(y);
+        out.println(GameAssets.getGson().toJson(message));
+    }
+
     public static void disconnectFromServer(){
         try{
             if(listener != null){
@@ -75,6 +92,14 @@ public class Client{
                 case GameConstants.REQUEST_BEGIN:
                     MainController.stateGameBegin(data.getMessage());
                     break;
+                case GameConstants.REQUEST_GAMEPLAY_START:
+                    MainController.stateGameRunning();
+                    break;
+                case GameConstants.REQUEST_MESSAGE:
+                    MainController.showMessage(data.getMessage(), data.getSender());
+                    break;
+                case GameConstants.REQUEST_ENDTURN:
+                    MainController.checkBeginTurn(data.getMessage());
             }
 //            if(data.length == 3){
 //                switch(data[0]){
@@ -101,7 +126,7 @@ public class Client{
 //                    case GameConstants.REQUEST_ENDTURN:
 //                        if(!data[2].equals(String.valueOf(GameAssets.getPlayerId()))){
 //                            MainController.processShot(data[1]);
-//                            MainController.beginTurn();
+//                            MainController.checkBeginTurn();
 //                        }
 //                        break;
 //                    case GameConstants.REQUEST_HIT:
@@ -143,7 +168,6 @@ public class Client{
             try{
                 while (running) {
                     while((readData = in.readLine()) != null){
-                        System.out.println("DATA VASTAANOTETTU!!! - " + readData);
                         parseServerInput(GameAssets.getGson().fromJson(readData, MessageObject.class));
                     }
                     if (in.read() == -1) {

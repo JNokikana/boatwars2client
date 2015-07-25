@@ -37,7 +37,7 @@ public class MainController {
         if((GameAssets.getState() != GameConstants.STATE_MENU) &&
                 k.getKeyCode() == KeyEvent.VK_ENTER
                 && gui.getChatField().getText().length() > 0 && gui.getChatField().hasFocus()){
-            sendChatMessage(gui.getChatField().getText());
+            Client.sendChatMessage(gui.getChatField().getText());
             gui.getChatField().setText(null);
         }
     }
@@ -92,7 +92,7 @@ public class MainController {
         if(gui.getEndTurnButton().getText().equals("Ready!")){
             GameAssets.setState(GameConstants.STATE_WAITING);
             gui.setEndTurn(false);
-            sendReadyMessage();
+            Client.sendReadyMessage();
             gui.getEndTurnButton().setText("End Turn");
         } 
         else{
@@ -101,7 +101,7 @@ public class MainController {
                 GameAssets.setTargetPlaced(false);
                 GameAssets.setTurn(false);
                 gui.setEndTurn(false);
-                sendEndTurnMessage();
+                Client.sendTargetMessage(GameAssets.getTargetCoords()[0][0], GameAssets.getTargetCoords()[0][1]);
             } 
             else{
                 errorNoTarget();
@@ -311,19 +311,7 @@ public class MainController {
     public synchronized static void showMessage(String message, String source){
         gui.addText("[" + source + "]" + ": " + message);
     }
-    
-    public static void sendChatMessage(String message){
-//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_MESSAGE, message, GameAssets.getNickname()});
-    }
-    
-    private static void sendEndTurnMessage(){
-//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_ENDTURN, GameAssets.getTargetCoords()[0][0] + "," + GameAssets.getTargetCoords()[0][1], String.valueOf(GameAssets.getPlayerId())});
-    }
-    
-    private static void sendReadyMessage(){
-//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_READY, GameConstants.MESSAGE_READY, GameAssets.getNickname()});
-    }
-    
+
     private static void sendHitMessage(String data){
 //        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_HIT, data, GameAssets.getNickname()});
     }
@@ -340,10 +328,13 @@ public class MainController {
 //        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_ALL_DESTROYED, "", String.valueOf(GameAssets.getPlayerId())});
     }
     
-    public static void beginTurn(){
-        GameAssets.setTurn(true);
-        gui.setEndTurn(true);
-        showMessage(GameAssets.getNickname() + " its your turn.", "SERVER");
+    public static void checkBeginTurn(String id){
+        int thisId = Integer.valueOf(id);
+        if(thisId != GameAssets.getPlayerId()){
+            GameAssets.setTurn(true);
+            gui.setEndTurn(true);
+            showMessage("'" + GameAssets.getNickname() + " its your turn." + "'", GameConstants.CLIENT_NAME);
+        }
     }
     
     public static void processShot(String coords){
