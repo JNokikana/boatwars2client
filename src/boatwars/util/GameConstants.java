@@ -13,7 +13,9 @@ public class GameConstants {
     public final static byte STATE_POST_MATCH = 4;
     
     public final static String WAITING_FOR_CONNECTION = "Setting up server....";
-    
+
+    public static final String CLIENT_NAME = "CLIENT";
+
     public final static int PORT = 17413;
     /*testi*/
     public final static String REQUEST_JOIN = "JOIN";
@@ -29,7 +31,10 @@ public class GameConstants {
     public final static String REQUEST_MISS = "MISS";
     public final static String REQUEST_ALL_DESTROYED = "YOU SUNK MY BATTLESHIPS!";
     public final static String REQUEST_SUNK = "SUNK";
-    public final static String REQUEST_INFO = "FYI";
+    public final static String REQUEST_REFUSED = "FU";
+    public final static String REQUEST_INFO = "INFO";
+
+    public static final String INFO_DISCONNECTED = "Disconnected from server at ";
     
     public final static byte TILE_STATE_EMPTY = 0;
     public final static byte TILE_STATE_MISS = 1;

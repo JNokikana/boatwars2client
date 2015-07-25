@@ -267,7 +267,7 @@ public class MainController {
     }
 
     public static void disconnectFromServer(){
-        MainController.chatMessageReceived("Disconnecting..", "CLIENT");
+        MainController.showMessage("Disconnecting..", "CLIENT");
         System.out.println("Paskaa");
         try{
             Client.disconnectFromServer();
@@ -296,8 +296,8 @@ public class MainController {
         gui.addText("Could not connect to server");
     }
     
-    public synchronized static void chatMessageReceived(String message, String nickname){
-        gui.addText("[" + nickname + "]" + ": " + message);
+    public synchronized static void showMessage(String message, String source){
+        gui.addText("[" + source + "]" + ": " + message);
     }
     
     public static void sendChatMessage(String message){
@@ -331,7 +331,7 @@ public class MainController {
     public static void beginTurn(){
         GameAssets.setTurn(true);
         gui.setEndTurn(true);
-        chatMessageReceived(GameAssets.getNickname() + " its your turn.", "SERVER");
+        showMessage(GameAssets.getNickname() + " its your turn.", "SERVER");
     }
     
     public static void processShot(String coords){

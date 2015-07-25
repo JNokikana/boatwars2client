@@ -68,29 +68,33 @@ public class Client{
             this.start();
         }
 
-        private void parseJPData(MessageObject data){
-            System.out.println("Tavaraa");
-            System.out.println(data.getMessage());
+        private void parseServerInput(MessageObject data){
+            switch(data.getType()){
+                case GameConstants.REQUEST_INFO:
+                case GameConstants.REQUEST_REFUSED:
+                    MainController.showMessage(data.getMessage(), data.getSender());
+                    break;
+            }
 //            if(data.length == 3){
 //                switch(data[0]){
 //                    case GameConstants.REQUEST_MESSAGE:
-//                        MainController.chatMessageReceived(data[1], data[2]);
+//                        MainController.showMessage(data[1], data[2]);
 //                        break;
 //                    case GameConstants.REQUEST_CLIENT_BYE:
-//                        MainController.chatMessageReceived(data[2] + " has " + data[1], "SERVER");
+//                        MainController.showMessage(data[2] + " has " + data[1], "SERVER");
 //                        break;
 //                    case GameConstants.REQUEST_PLAYER:
 //                        String message = (data[1]).substring(0, data[1].length() - 1);
-//                        MainController.chatMessageReceived(message, data[2]);
+//                        MainController.showMessage(message, data[2]);
 //                        GameAssets.setPlayerId(Integer.valueOf(data[1].substring(data[1].length() - 1)).byteValue());
-//                        MainController.chatMessageReceived("You are player " + (GameAssets.getPlayerId() + 1) + ".", "SERVER");
+//                        MainController.showMessage("You are player " + (GameAssets.getPlayerId() + 1) + ".", "SERVER");
 //                        MainController.stateGameReady();
 //                        break;
 //                    case GameConstants.REQUEST_READY:
-//                        MainController.chatMessageReceived("Player " + data[2] + " is ready.", "SERVER");
+//                        MainController.showMessage("Player " + data[2] + " is ready.", "SERVER");
 //                        break;
 //                    case GameConstants.REQUEST_BEGIN:
-//                        MainController.chatMessageReceived("All players are ready. Let the boat wars begin!!", "SERVER");
+//                        MainController.showMessage("All players are ready. Let the boat wars begin!!", "SERVER");
 //                        MainController.stateGameBegun();
 //                        break;
 //                    case GameConstants.REQUEST_ENDTURN:
@@ -107,19 +111,19 @@ public class Client{
 //                        break;
 //                    case GameConstants.REQUEST_SUNK:
 //                        if(Integer.valueOf(data[2]) == GameAssets.getPlayerId()){
-//                            MainController.chatMessageReceived("Your " + data[1] + " was sunk!", "SERVER");
+//                            MainController.showMessage("Your " + data[1] + " was sunk!", "SERVER");
 //                        }
 //                        else{
-//                            MainController.chatMessageReceived("You sunk the enemy " + data[1] + "!", "SERVER");
+//                            MainController.showMessage("You sunk the enemy " + data[1] + "!", "SERVER");
 //                        }
 //                        break;
 //                    case GameConstants.REQUEST_ALL_DESTROYED:
 //                        if(Integer.valueOf(data[2]) != GameAssets.getPlayerId()){
-//                            MainController.chatMessageReceived("The BoatWar is over. You rule!", "SERVER");
+//                            MainController.showMessage("The BoatWar is over. You rule!", "SERVER");
 //                            GameAssets.setGameResult(true);
 //                        }
 //                        else{
-//                            MainController.chatMessageReceived("The BoatWar is over. You suck!", "SERVER");
+//                            MainController.showMessage("The BoatWar is over. You suck!", "SERVER");
 //                            GameAssets.setGameResult(false);
 //                        }
 //                        MainController.statePostMatch();
@@ -137,13 +141,12 @@ public class Client{
         public void run(){
             try{
                 while (running) {
-                    System.out.println("Lukee!!");
                     while((readData = in.readLine()) != null){
-                        System.out.println(readData);
-                        parseJPData(GameAssets.getGson().fromJson(readData, MessageObject.class));
+                        System.out.println("DATA VASTAANOTETTU!!! - " + readData);
+                        parseServerInput(GameAssets.getGson().fromJson(readData, MessageObject.class));
                     }
                     if (in.read() == -1) {
-                        System.out.println("asakas");
+                        MainController.showMessage(GameConstants.INFO_DISCONNECTED + address, GameConstants.CLIENT_NAME);
                         disconnectFromServer();
                     }
                 }
