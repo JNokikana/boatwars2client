@@ -93,7 +93,7 @@ public class Client {
     }
 
     public static void sendGameOverMessage() {
-        MessageObject message = new MessageObject(GameConstants.REQUEST_ALL_DESTROYED, "", "");
+        MessageObject message = new MessageObject(GameConstants.REQUEST_ALL_DESTROYED, "", GameAssets.getNickname());
         message.setId(GameAssets.getPlayerId());
         out.println(GameAssets.getGson().toJson(message));
     }

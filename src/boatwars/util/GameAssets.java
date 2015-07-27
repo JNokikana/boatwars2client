@@ -54,6 +54,7 @@ public class GameAssets {
         isTurn = false;
         mouseXY = new int[2];
         grid = false;
+        allPlaced = false;
     }
     
     public static void setDestroyedShips(int i, boolean b){
