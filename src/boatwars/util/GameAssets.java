@@ -40,7 +40,7 @@ public class GameAssets {
         resetShipVariables();
     }
     
-    public static void setGameResult(boolean b){
+    public static void setGameWon(boolean b){
         won = b;
     }
     

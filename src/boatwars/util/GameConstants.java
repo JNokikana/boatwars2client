@@ -21,6 +21,7 @@ public class GameConstants {
     public final static String INFO_MESSAGE_BEGIN = "Both players have joined. Place your boats.";
 
     public static final String CLIENT_NAME = "CLIENT";
+    public static final String SERVER_NAME = "SERVER";
 
     public final static int PORT = 17413;
     /*testi*/
@@ -39,6 +40,8 @@ public class GameConstants {
     public final static String REQUEST_SUNK = "SUNK";
     public final static String REQUEST_INFO = "INFO";
     public final static String REQUEST_GAMEPLAY_START = "GAMEON";
+    public final static String REQUEST_REMATCH_YES = "REMATCH_YES";
+    public final static String REQUEST_REMATCH_NO = "REMATCH_NO";
 
     public static final String INFO_DISCONNECTED = "Disconnected from server at ";
     

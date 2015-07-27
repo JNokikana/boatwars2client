@@ -50,8 +50,18 @@ public class Client {
         out.println(GameAssets.getGson().toJson(message));
     }
 
+    /**
+     * Used for sending chat messages and also for initiating rematches.
+     * @param text
+     */
     public static void sendChatMessage(String text) {
-        MessageObject message = new MessageObject(GameConstants.REQUEST_MESSAGE, text, GameAssets.getNickname());
+        MessageObject message;
+        if(GameAssets.getState() == GameConstants.STATE_POST_MATCH && text.equals("/rematch")){
+            message = new MessageObject(GameConstants.REQUEST_REMATCH_YES, "", GameAssets.getNickname());
+        }
+        else{
+            message = new MessageObject(GameConstants.REQUEST_MESSAGE, text, GameAssets.getNickname());
+        }
         out.println(GameAssets.getGson().toJson(message));
     }
 
@@ -79,6 +89,12 @@ public class Client {
         MessageObject message = new MessageObject(GameConstants.REQUEST_MISS, "", GameAssets.getNickname());
         message.setX(x);
         message.setY(y);
+        out.println(GameAssets.getGson().toJson(message));
+    }
+
+    public static void sendGameOverMessage() {
+        MessageObject message = new MessageObject(GameConstants.REQUEST_ALL_DESTROYED, "", "");
+        message.setId(GameAssets.getPlayerId());
         out.println(GameAssets.getGson().toJson(message));
     }
 
@@ -128,6 +144,9 @@ public class Client {
                     break;
                 case GameConstants.REQUEST_SUNK:
                     MainController.sunkShip(data);
+                    break;
+                case GameConstants.REQUEST_ALL_DESTROYED:
+                    MainController.statePostMatch(data);
                     break;
             }
         }

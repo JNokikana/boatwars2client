@@ -52,11 +52,6 @@ public class MainController {
         }
     }
 
-    private static void showServerNotice() {
-        JOptionPane.showMessageDialog(null, "To play online you must open port " + GameConstants.PORT + " "
-                + " from your router settings.", "Start Server", JOptionPane.INFORMATION_MESSAGE);
-    }
-
     public static void actionOrientation() {
         GameAssets.switchOrientation();
         refreshShipScreen();
@@ -309,16 +304,8 @@ public class MainController {
         gui.getGamePanel().repaint();
     }
 
-    public void errorConnecting() {
-        gui.addText("Could not connect to server");
-    }
-
     public synchronized static void showMessage(String message, String source) {
         gui.addText("[" + source + "]" + ": " + message);
-    }
-
-    private static void sendGameOverMessage() {
-//        GameAssets.getClient().sendData(new String[]{GameConstants.REQUEST_ALL_DESTROYED, "", String.valueOf(GameAssets.getPlayerId())});
     }
 
     public static void checkBeginTurnProcessShot(MessageObject data) {
@@ -388,8 +375,9 @@ public class MainController {
         if (damage >= GameConstants.SIZES[shipIndex]) {
             GameAssets.setDestroyedShips(shipIndex, true);
             Client.sendSinkMessage(shipIndex);
+
             if (isGameOver()) {
-                sendGameOverMessage();
+                Client.sendGameOverMessage();
             }
         }
     }
@@ -454,10 +442,21 @@ public class MainController {
         GameAssets.setState(GameConstants.STATE_GAME);
     }
 
-    public static void statePostMatch() {
+    public static void statePostMatch(MessageObject data) {
+        /* We check who sent the lost message. */
+        int id = data.getId();
+
+        if(id != GameAssets.getPlayerId()){
+            /* If the lost message id does not match this client then
+            this client must be the winner.
+             */
+            GameAssets.setGameWon(true);
+        }
+
+        gui.getEndTurnButton().setEnabled(false);
+        MainController.showMessage(data.getMessage(), data.getSender());
         GameAssets.setTurn(false);
         GameAssets.setState(GameConstants.STATE_POST_MATCH);
-        gui.getEndTurnButton();
         GameAssets.resetShipVariables();
     }
 }

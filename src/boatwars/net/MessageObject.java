@@ -7,6 +7,7 @@ public class MessageObject {
     private String type;
     private String message;
     private String sender;
+    private int id;
     private int x;
     private int y;
 
@@ -54,5 +55,13 @@ public class MessageObject {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
