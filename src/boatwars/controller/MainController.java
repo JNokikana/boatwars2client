@@ -416,6 +416,7 @@ public class MainController {
     public static void stateGameBegin(String id) {
         GameAssets.setPlayerId(Integer.valueOf(id));
         gui.addText("You are player " + (GameAssets.getPlayerId() + 1) + ".");
+        GameAssets.setGameWon(false);
         gui.addText(GameConstants.INFO_MESSAGE_BEGIN);
         GameAssets.setState(GameConstants.STATE_PLACING_BOATS);
         gui.setMessageLabel(GameAssets.getNickname());

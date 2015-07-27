@@ -18,7 +18,7 @@ public class GameConstants {
     public static final int FIELD_Y_MAX = 216;
     public static final int FIELD_X_MAX = 456;
 
-    public final static String INFO_MESSAGE_BEGIN = "Both players have joined. Place your boats.";
+    public final static String INFO_MESSAGE_BEGIN = "Both players are present. Place your boats.";
 
     public static final String CLIENT_NAME = "CLIENT";
     public static final String SERVER_NAME = "SERVER";
