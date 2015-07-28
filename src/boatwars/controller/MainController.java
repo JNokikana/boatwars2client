@@ -69,6 +69,21 @@ public class MainController {
         }
     }
 
+    public static void repaint(){
+        gui.getGamePanel().repaint();
+    }
+
+    public static void resetGameState(){
+        GameAssets.initialize();
+        gui.getEndTurnButton().setEnabled(false);
+        gui.getOrientationButton().setEnabled(false);
+
+        gui.disableChat();
+        drawShipPlate();
+        drawPlateScreen();
+        repaint();
+    }
+
     public static void actionAbout() {
         JOptionPane.showMessageDialog(null, GameConstants.ABOUT, GameConstants.TITLE, JOptionPane.INFORMATION_MESSAGE);
     }
@@ -272,6 +287,10 @@ public class MainController {
         }
     }
 
+    public static MainGUI getGui(){
+        return gui;
+    }
+
     public static void refreshCursorGraphics() {
         gui.getGamePanel().repaint();
     }
@@ -289,6 +308,7 @@ public class MainController {
 
         gui.stateDisconnectedFromServer();
         gui.disableChat();
+        resetGameState();
     }
 
     public static void refreshShipScreen() {
@@ -321,7 +341,6 @@ public class MainController {
 
     public static void processShot(int x, int y) {
         if (checkHitAndDamage(x, y)) {
-            System.out.println("Osu");
             Client.sendHitMessage(x, y);
         } else {
             Client.sendMissMessage(x, y);

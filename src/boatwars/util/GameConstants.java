@@ -42,6 +42,7 @@ public class GameConstants {
     public final static String REQUEST_GAMEPLAY_START = "GAMEON";
     public final static String REQUEST_REMATCH_YES = "REMATCH_YES";
     public final static String REQUEST_REMATCH_NO = "REMATCH_NO";
+    public final static String REQUEST_RESET_GAME = "RESET";
 
     public static final String INFO_DISCONNECTED = "Disconnected from server at ";
     

@@ -56,6 +56,10 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
         endTurnButton.setText("Ready!");
         endTurnButton.setEnabled(true);
     }
+
+    public JButton getOrientationButton(){
+        return changeOrientation;
+    }
     
     public void setMessageLabel(String g){
         fieldLabel.setText(g + " says:");
@@ -89,17 +93,7 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
     public void setChangeOrientation(boolean b){
         this.changeOrientation.setEnabled(b);
     }
-    
-    public void stateHostingServer(){
-        menuBar.getMenu(1).getItem(1).setEnabled(true);
-        menuBar.getMenu(1).getItem(0).setEnabled(false);
-    }
-    
-    public void stateNotHostingServer(){
-        menuBar.getMenu(1).getItem(1).setEnabled(false);
-        menuBar.getMenu(1).getItem(0).setEnabled(true);
-    }
-    
+
     public void stateCanDisconnectFromServer(){
         menuBar.getMenu(0).getItem(0).setEnabled(true);
         menuBar.getMenu(0).getItem(2).setEnabled(false);
@@ -172,7 +166,6 @@ public class MainGUI extends javax.swing.JFrame implements KeyListener, ActionLi
         initButtons();
         initMenuBars();
         setName("Main");
-        System.out.println(ClassLoader.getSystemResource(""));
         setIconImage(new ImageIcon("").getImage());
         setJMenuBar(menuBar);
         addWindowListener(new WindowListener(){

@@ -31,7 +31,7 @@ public class Client {
                     return true;
                 }
             } else {
-                System.out.println("Already connected to server");
+                MainController.showMessage("Already connected to server.", GameConstants.CLIENT_NAME);
             }
         } catch (Exception e) {
             disconnectFromServer();
@@ -106,9 +106,16 @@ public class Client {
             if (connection != null) {
                 connection.close();
             }
+            MainController.resetGameState();
+            MainController.getGui().stateDisconnectedFromServer();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void resetGameRequest(MessageObject data){
+        MainController.showMessage(data.getMessage(), data.getSender());
+        MainController.resetGameState();
     }
 
     private static class ServerListener extends Thread {
@@ -147,6 +154,9 @@ public class Client {
                     break;
                 case GameConstants.REQUEST_ALL_DESTROYED:
                     MainController.statePostMatch(data);
+                    break;
+                case GameConstants.REQUEST_RESET_GAME:
+                    resetGameRequest(data);
                     break;
             }
         }

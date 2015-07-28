@@ -52,6 +52,7 @@ public class GameAssets {
         hitSpaces = new byte[20][10];
         destroyedShips = new boolean[GameConstants.SHIPS.length];
         isTurn = false;
+        targetPlaced = false;
         mouseXY = new int[2];
         grid = false;
         allPlaced = false;
@@ -84,7 +85,6 @@ public class GameAssets {
     }
     
     public static byte getTileState(int x, int y){
-        System.out.println(x + " " + y);
         return hitSpaces[x / GameConstants.TILE_SIZE][y / GameConstants.TILE_SIZE];
     }
     
