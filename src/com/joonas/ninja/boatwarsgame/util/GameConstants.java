@@ -82,7 +82,7 @@ public class GameConstants {
     
     public final static String PNG = ".png";
     
-    public final static String CARRIER = "carr";
+    public final static String CARRIER = "carrier";
     public final static String BATTLESHIP = "battleship";
     public final static String CRUISER = "cruiser";
     public final static String SUBMARINE = "submarine";
