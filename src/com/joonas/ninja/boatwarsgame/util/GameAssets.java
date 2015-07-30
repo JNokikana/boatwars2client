@@ -1,6 +1,6 @@
-package boatwars.util;
+package com.joonas.ninja.boatwarsgame.util;
 
-import boatwars.net.Client;
+import com.joonas.ninja.boatwarsgame.net.Client;
 import com.google.gson.Gson;
 
 public class GameAssets {

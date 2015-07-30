@@ -1,4 +1,4 @@
-package boatwars.net;
+package com.joonas.ninja.boatwarsgame.net;
 
 /**
  * Created by Joonas on 19.7.2015.

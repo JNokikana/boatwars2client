@@ -1,12 +1,12 @@
-package boatwars.controller;
+package com.joonas.ninja.boatwarsgame.controller;
 
-import boatwars.BoatWars;
-import boatwars.gui.MainGUI;
-import boatwars.gui.NewGameJoinGUI;
-import boatwars.net.Client;
-import boatwars.net.MessageObject;
-import boatwars.util.GameAssets;
-import boatwars.util.GameConstants;
+import com.joonas.ninja.boatwarsgame.BoatWars;
+import com.joonas.ninja.boatwarsgame.gui.MainGUI;
+import com.joonas.ninja.boatwarsgame.gui.NewGameJoinGUI;
+import com.joonas.ninja.boatwarsgame.net.Client;
+import com.joonas.ninja.boatwarsgame.net.MessageObject;
+import com.joonas.ninja.boatwarsgame.util.GameAssets;
+import com.joonas.ninja.boatwarsgame.util.GameConstants;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;

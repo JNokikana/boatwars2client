@@ -1,7 +1,7 @@
-package boatwars.gui;
+package com.joonas.ninja.boatwarsgame.gui;
 
-import boatwars.controller.MainController;
-import boatwars.util.GameConstants;
+import com.joonas.ninja.boatwarsgame.controller.MainController;
+import com.joonas.ninja.boatwarsgame.util.GameConstants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;

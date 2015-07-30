@@ -1,7 +1,7 @@
-package boatwars;
+package com.joonas.ninja.boatwarsgame;
 
-import boatwars.gui.MainGUI;
-import boatwars.util.GameAssets;
+import com.joonas.ninja.boatwarsgame.gui.MainGUI;
+import com.joonas.ninja.boatwarsgame.util.GameAssets;
 
 import java.io.File;
 

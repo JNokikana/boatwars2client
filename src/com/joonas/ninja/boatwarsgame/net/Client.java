@@ -1,8 +1,8 @@
-package boatwars.net;
+package com.joonas.ninja.boatwarsgame.net;
 
-import boatwars.controller.MainController;
-import boatwars.util.GameAssets;
-import boatwars.util.GameConstants;
+import com.joonas.ninja.boatwarsgame.controller.MainController;
+import com.joonas.ninja.boatwarsgame.util.GameAssets;
+import com.joonas.ninja.boatwarsgame.util.GameConstants;
 
 import java.io.*;
 import java.net.Socket;

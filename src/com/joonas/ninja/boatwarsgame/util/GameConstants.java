@@ -1,4 +1,4 @@
-package boatwars.util;
+package com.joonas.ninja.boatwarsgame.util;
 
 import java.io.File;
 

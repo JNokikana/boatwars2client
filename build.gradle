@@ -1,4 +1,7 @@
 apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = "com.joonas.ninja.boatwarsgame.BoatWars"
 sourceCompatibility = 1.7
 sourceSets.main.java.srcDirs = ["src/"]
 
@@ -9,6 +12,15 @@ repositories{
 jar{
     baseName = "BoatWars"
     version = '2.0'
+    jar {
+        manifest {
+            attributes "Main-Class": "$mainClassName"
+        }
+
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+    }
 }
 
 dependencies{
