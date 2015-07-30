@@ -49,6 +49,7 @@ public class GameConstants {
     public final static byte TILE_STATE_EMPTY = 0;
     public final static byte TILE_STATE_MISS = 1;
     public final static byte TILE_STATE_HIT = 2;
+    public final static byte TILE_STATE_DESTROYED = 3;
     
     public final static String ABOUT = "This game was made in 2014 by Joonas Nousiainen. Making it was very fun.";
     
@@ -71,6 +72,7 @@ public class GameConstants {
     public final static String GRAPHICS_WON = "endWin.png";
     public final static String GRAPHICS_LOSE = "endLose.png";
     public final static String GRAPHICS_PLATE = "plate.png";
+    public final static String GRAPHICS_DESTROYED = "explosion.png";
     
     public final static String MESSAGE_READY = " is ready.";
     

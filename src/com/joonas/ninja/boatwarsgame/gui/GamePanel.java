@@ -59,6 +59,10 @@ public class GamePanel extends JPanel{
                         g.drawImage(new ImageIcon(path + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_MISS).getImage(),
                                 i * GameConstants.TILE_SIZE, m * GameConstants.TILE_SIZE, null);
                     }
+                    else if(GameAssets.getHitSpaces()[i][m] == GameConstants.TILE_STATE_DESTROYED){
+                        g.drawImage(new ImageIcon(path + GameConstants.PATH_GRAPHICS + GameConstants.GRAPHICS_DESTROYED).getImage(),
+                                i * GameConstants.TILE_SIZE, m * GameConstants.TILE_SIZE, null);
+                    }
                 }
             }
         }

@@ -400,7 +400,11 @@ public class MainController {
             }
         }
     }
-
+/*
+    private static void destroyTiles(int shipIndex){
+        for(int i = 0; i < GameAssets.getSh)
+    }
+*/
     /**
      * Checks if all of the players ships have been sunk.
      *
